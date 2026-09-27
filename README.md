@@ -10,11 +10,12 @@ Um radar pessoal que roda sozinho, de graça, no GitHub, e faz três coisas:
 2. **Para onde dá pra ir barato?** Lista as passagens de ida e volta mais baratas saindo de
    Belém para *qualquer* destino nos próximos meses (Lima, Fortaleza, São Luís...).
 3. **Me avisa das promoções.** Lê os blogs de milhas (Passageiro de Primeira, Melhores
-   Destinos, Pontos pra Voar) e manda no seu **Telegram** quando aparece bônus de
+   Destinos, Pontos pra Voar) e manda uma **notificação no celular** quando aparece bônus de
    transferência Livelo/Inter → Azul, promoção saindo de Belém ou quando o preço cai /
    fica abaixo do alvo que você definiu.
 
-Tudo aparece num painel web (funciona bem no celular) e os alertas chegam no Telegram.
+Tudo aparece num painel web (funciona bem no celular) e os alertas chegam como notificação
+push no Android, pelo app gratuito [ntfy](https://ntfy.sh).
 
 ## Como funciona
 
@@ -26,7 +27,7 @@ GitHub Actions (3x por dia)
         ↓
    calcula melhores datas, plano de pontos, compara com o histórico
         ↓
-   painel no GitHub Pages  +  alertas no Telegram
+   painel no GitHub Pages  +  notificação push (ntfy)
 ```
 
 ## Configurar (uns 20 minutos, uma vez só)
@@ -35,11 +36,28 @@ GitHub Actions (3x por dia)
 Crie uma conta em [travelpayouts.com](https://www.travelpayouts.com/), vá em
 **Perfil → API token** e copie o token.
 
-### 2. Bot do Telegram (grátis)
-1. No Telegram, fale com **@BotFather** → `/newbot` → escolha um nome. Ele te dá o **token**.
-2. Mande qualquer mensagem para o seu bot novo.
-3. Abra `https://api.telegram.org/bot<SEU_TOKEN>/getUpdates` no navegador e copie o número
-   em `"chat":{"id": ...}` — esse é o **chat id**.
+### 2. Notificações no Android (grátis, sem cadastro)
+1. Instale o **ntfy** pela [Play Store](https://play.google.com/store/apps/details?id=io.heckel.ntfy)
+   (ou F-Droid).
+2. Invente um nome secreto e difícil de adivinhar para o seu canal, por exemplo
+   `radar-passagens-k7q2m9xw4t`. **Quem souber esse nome consegue ler seus avisos**, então
+   não use algo óbvio.
+3. No app, toque em **+** → digite o nome → **Subscribe**.
+4. Teste: abra `https://ntfy.sh/SEU_NOME` no navegador do computador, escreva uma mensagem e
+   envie — ela deve aparecer no celular.
+5. Para não perder alertas: em *Configurações do Android → Apps → ntfy → Bateria*, escolha
+   **Sem restrições**.
+
+Os avisos chegam com prioridade diferente:
+
+| Aviso | Como chega |
+|---|---|
+| Bônus de transferência para a Azul · preço abaixo do seu alvo | **Urgente** (toca e vibra mais) |
+| Queda de preço · destino barato | Normal |
+| Outras promoções de passagem | Discreta |
+
+Se houver muitos avisos de uma vez, chegam os 5 mais importantes e um resumo com o resto.
+Tocar na notificação abre o link da passagem ou da promoção.
 
 ### 3. Pontos Azul reais (opcional, pago)
 Sem isso, o radar **estima** os pontos a partir do preço em reais (configurável em
@@ -53,15 +71,15 @@ No repositório: **Settings → Secrets and variables → Actions → New reposi
 | Segredo | Valor |
 |---|---|
 | `TRAVELPAYOUTS_TOKEN` | token do passo 1 |
-| `TELEGRAM_BOT_TOKEN` | token do BotFather |
-| `TELEGRAM_CHAT_ID` | chat id do passo 2 |
+| `NTFY_TOPIC` | o nome secreto do passo 2 |
 | `SEATS_AERO_KEY` | (opcional) chave do Seats.aero |
 | `SALDOS` | (opcional) ex.: `azul=12000,livelo=45000,cartao=20000` — assim seus saldos não ficam públicos |
 
 Depois: **Settings → Pages → Source: GitHub Actions**. Em **Actions → Radar de passagens →
 Run workflow** você roda na hora; depois ele roda sozinho 3x por dia. O endereço do painel
 aparece no resultado do job (algo como `https://SEU_USUARIO.github.io/travelling/`). Se
-quiser o link do painel nas mensagens do Telegram, crie a *variable* `DASHBOARD_URL` com ele.
+quiser um botão "Ver painel" nas notificações, crie a *variable* (aba **Variables**, não
+Secrets) `DASHBOARD_URL` com esse endereço.
 
 > **Privacidade:** o GitHub Pages é público mesmo com o repositório privado em contas
 > gratuitas. O painel não tem nada sensível além dos saldos — por isso a opção `SALDOS`

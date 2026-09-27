@@ -36,12 +36,17 @@ class RouteReport:
         return min(trips, key=lambda t: (t.total_points, t.total_price) if points else t.total_price)
 
 
+# Prioridades de notificação (mesma escala do ntfy: 1 = mínima, 5 = urgente).
+PRIORITY_LOW, PRIORITY_NORMAL, PRIORITY_URGENT = 2, 3, 5
+
+
 @dataclass
 class Alert:
     key: str
     title: str
     text: str
     link: str = ""
+    priority: int = PRIORITY_NORMAL
 
 
 @dataclass
@@ -217,7 +222,8 @@ def compute_alerts(rep: Report, state: dict) -> list[Alert]:
                 target = r.target_points if points else r.target_price
                 if _below_target(state, key, value, target):
                     alerts.append(Alert(f"alvo|{key}", f"🎯 {where} abaixo do alvo",
-                                        f"{wr.window.name}: {fmt(value)} — {dates}. Seu alvo: {fmt(target)}.", link))
+                                        f"{wr.window.name}: {fmt(value)} — {dates}. Seu alvo: {fmt(target)}.", link,
+                                        PRIORITY_URGENT))
                 elif previous and value < min(previous) * (1 - cfg.drop_pct / 100):
                     alerts.append(Alert(f"queda|{key}", f"📉 Preço caiu: {where}",
                                         f"{wr.window.name}: {fmt(value)} (antes {fmt(min(previous))}) — {dates}.", link))
@@ -237,7 +243,9 @@ def compute_alerts(rep: Report, state: dict) -> list[Alert]:
             continue
         seen.append(p.link)
         emoji = "💳" if p.kind == "transferencia" else "🏷️"
-        alerts.append(Alert(f"promo|{p.link}", f"{emoji} {p.title}", f"Fonte: {p.source}", p.link))
+        urgent = p.kind == "transferencia" and "azul" in p.programs
+        alerts.append(Alert(f"promo|{p.link}", f"{emoji} {p.title}", f"Fonte: {p.source}", p.link,
+                            PRIORITY_URGENT if urgent else PRIORITY_LOW))
     state["seen_promos"] = seen[-500:]
     rep.alerts = alerts
     return alerts

@@ -68,9 +68,11 @@ def cmd_painel(args) -> int:
         for al in alerts:
             print(f"- {al.title}: {al.text}")
         return 0
-    from radar.notify import send_telegram
+    from radar.notify import send_push
 
-    send_telegram(alerts)
+    sent = send_push(alerts)
+    if sent:
+        print(f"{sent} notificação(ões) enviada(s).")
     return 0
 
 
@@ -131,7 +133,7 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser("painel", help="atualiza tudo, gera o painel e envia alertas")
     s.add_argument("--saida", default="site")
     s.add_argument("--estado", default="data/state.json")
-    s.add_argument("--sem-alertas", action="store_true", help="não envia Telegram, só mostra no terminal")
+    s.add_argument("--sem-alertas", action="store_true", help="não envia notificações, só mostra no terminal")
     s.add_argument("--hoje", help=argparse.SUPPRESS)
     s.set_defaults(fn=cmd_painel)
 

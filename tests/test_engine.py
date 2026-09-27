@@ -49,3 +49,12 @@ def test_price_drop_alert():
 def test_render_html():
     html = render(report())
     assert "Radar de Passagens" in html and "Maceió" in html and "FICTÍCIOS" in html
+
+
+def test_alert_priorities():
+    from radar.engine import PRIORITY_LOW, PRIORITY_URGENT
+
+    by_title = {a.title: a.priority for a in compute_alerts(report(), {})}
+    assert by_title["💳 [EXEMPLO] Inter Loop: ganhe 80% de bônus ao transferir pontos para a Azul"] == PRIORITY_URGENT
+    assert by_title["🏷️ [EXEMPLO] Passagens de Belém para Lima a partir de R$ 899 ida e volta"] == PRIORITY_LOW
+    assert all(p == PRIORITY_URGENT for t, p in by_title.items() if "abaixo do alvo" in t)
