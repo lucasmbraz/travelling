@@ -1,0 +1,72 @@
+# Radar de Passagens — configuração pessoal
+# Edite à vontade. Datas no formato AAAA-MM-DD. Valores em reais (R$).
+
+origem: BEL            # Belém (Castanhal fica a ~70 km)
+
+# Seus saldos de pontos (atualize de vez em quando).
+saldos:
+  azul: 0              # Azul Fidelidade
+  livelo: 0            # Livelo
+  cartao: 0            # pontos do cartão (ex.: Inter Loop)
+
+# Como cada programa vira ponto Azul (1 ponto = 1 ponto Azul na proporção 1.0).
+# "bonus" é o bônus que você tem garantido agora (em %). O radar também detecta
+# promoções de bônus nos blogs e mostra quanto você ganharia com elas.
+programas:
+  livelo:
+    nome: Livelo
+    proporcao: 1.0
+    bonus: 0
+    palavras: [livelo]
+  cartao:
+    nome: Inter Loop
+    proporcao: 1.0
+    bonus: 0
+    palavras: [inter, loop]
+
+# Quanto vale 1.000 pontos Azul em R$ (usado só para ESTIMAR pontos quando não
+# há dados reais de resgate). Também é a régua do "vale a pena usar pontos?".
+valor_milheiro_azul: 16.0
+
+# Destinos que você acompanha sempre (ida e volta a partir da origem).
+rotas:
+  - destino: MCZ
+    nome: Maceió (casa dos pais)
+    alvo_reais: 900          # me avise se ida+volta ficar abaixo disso
+    alvo_pontos: 25000       # ...ou abaixo disso em pontos Azul
+  - destino: REC
+    nome: Recife + carro até Maceió
+    custo_extra_reais: 350   # combustível + pedágio, ida e volta (~260 km cada)
+    observacao: "~3h30 de carro até Maceió"
+    alvo_reais: 700
+    alvo_pontos: 20000
+
+# Janelas de viagem: o radar procura as melhores combinações de ida/volta
+# dentro delas, respeitando o tempo de estadia.
+janelas:
+  - nome: Fim de ano
+    inicio: 2026-12-12
+    fim: 2027-01-15
+    estadia_min: 7
+    estadia_max: 21
+  - nome: Próximos meses (flexível)
+    meses_a_frente: 6
+    estadia_min: 4
+    estadia_max: 14
+
+# "Para onde dá pra ir barato?" — ofertas saindo da origem para qualquer lugar.
+qualquer_destino:
+  meses_a_frente: 3
+  preco_max_alerta: 1200     # avisa quando ida+volta ficar abaixo disso
+  excluir: []                # códigos IATA que você não quer ver
+
+# Promoções: feeds RSS de blogs de milhas e passagens.
+promocoes:
+  feeds:
+    - https://passageirodeprimeira.com/feed/
+    - https://www.melhoresdestinos.com.br/feed
+    - https://pontospravoar.com/feed/
+  dias_recentes: 10          # ignora posts mais antigos que isso
+
+alertas:
+  queda_minima_pct: 10       # avisa quando o menor preço cair X% vs histórico

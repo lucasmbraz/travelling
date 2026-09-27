@@ -1,0 +1,63 @@
+name: Radar de passagens
+
+on:
+  schedule:
+    - cron: "17 9,15,21 * * *"   # 3x por dia (06h17, 12h17 e 18h17 em Belém)
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["config.yaml", "radar/**", ".github/workflows/radar.yml"]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install .
+
+      - name: Atualizar dados, gerar painel e enviar alertas
+        env:
+          TRAVELPAYOUTS_TOKEN: ${{ secrets.TRAVELPAYOUTS_TOKEN }}
+          SEATS_AERO_KEY: ${{ secrets.SEATS_AERO_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SALDOS: ${{ secrets.SALDOS }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+        run: |
+          if [ -n "$TRAVELPAYOUTS_TOKEN" ]; then
+            python -m radar painel
+          else
+            echo "::warning::TRAVELPAYOUTS_TOKEN não configurado — gerando painel de demonstração"
+            python -m radar --demo painel
+          fi
+
+      - name: Guardar histórico de preços
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add data/state.json 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "Atualiza histórico de preços" && git push)
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
