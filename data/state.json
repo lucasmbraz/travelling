@@ -1,0 +1,66 @@
+{
+ "alerted": {
+  "BEL-BSB|qualquer": 1193.0,
+  "BEL-FOR|qualquer": 925.0
+ },
+ "history": {
+  "BEL-BSB|qualquer": [
+   {
+    "t": "2026-09-27",
+    "v": 1193.0
+   }
+  ],
+  "BEL-FOR|qualquer": [
+   {
+    "t": "2026-09-27",
+    "v": 925.0
+   }
+  ],
+  "BEL-GRU|qualquer": [
+   {
+    "t": "2026-09-27",
+    "v": 1431.0
+   }
+  ],
+  "BEL-LIS|qualquer": [
+   {
+    "t": "2026-09-27",
+    "v": 4244.0
+   }
+  ],
+  "BEL-MIA|qualquer": [
+   {
+    "t": "2026-09-27",
+    "v": 3584.0
+   }
+  ],
+  "BEL-MII|qualquer": [
+   {
+    "t": "2026-09-27",
+    "v": 3372.0
+   }
+  ],
+  "BEL-SSA|qualquer": [
+   {
+    "t": "2026-09-27",
+    "v": 1228.0
+   }
+  ],
+  "BEL-STM|qualquer": [
+   {
+    "t": "2026-09-27",
+    "v": 1515.0
+   }
+  ],
+  "BEL-VCP|qualquer": [
+   {
+    "t": "2026-09-27",
+    "v": 1581.0
+   }
+  ]
+ },
+ "seen_promos": [
+  "https://passageirodeprimeira.com/ultimo-dia-azul-fidelidade-oferece-ate-110-de-bonus-nas-transferencias-de-pontos-de-varios-parceiros-incluindo-livelo-e-esfera/",
+  "https://passageirodeprimeira.com/ultimas-horas-ganhe-ate-30-de-bonus-ao-transferir-pontos-azul-para-all-accor/"
+ ]
+}
