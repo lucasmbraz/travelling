@@ -35,3 +35,10 @@ def test_parse_and_filter_feed():
     assert links == ["https://ex.com/a", "https://ex.com/b"]  # sem Smiles, review ou post antigo
     best = active_bonus(rel, ["livelo"])
     assert best and best.bonus_pct == 120
+
+
+def test_transfer_out_of_azul_is_not_an_azul_promo():
+    _, bonus, programs = classify("Últimas horas! Ganhe até 30% de bônus ao transferir pontos Azul para ALL Accor")
+    assert bonus == 30 and "azul" not in programs
+    _, _, programs = classify("Ganhe até 120% de bônus nas transferências da Livelo para o Azul Fidelidade")
+    assert "azul" in programs

@@ -48,3 +48,19 @@ def test_seats_aero_parses_and_paginates(monkeypatch):
     [o] = seatsaero.SeatsAeroProvider("k").one_way("BEL", ["MCZ"], date(2026, 12, 1), date(2026, 12, 31))
     assert o.points == 18500 and o.price == 37.9 and o.day == date(2026, 12, 20)
     assert seen[0]["sources"] == "azul" and seen[1]["cursor"] == 123
+
+
+def test_diagnose_reports_counts_and_errors(monkeypatch):
+    def fake(url, params=None, headers=None, retries=3):
+        if "calendar" in url:
+            raise RuntimeError("HTTP 400")
+        if "grouped" in url:
+            return {"success": True, "data": {"2026-10-01": {"price": 500}, "2026-10-02": {"price": 600}}}
+        return {"success": True, "data": []}
+
+    monkeypatch.setattr(travelpayouts, "get_json", fake)
+    lines = travelpayouts.diagnose("t", "BEL", ["MCZ"], [(2026, 10)])
+    assert lines[0] == "== BEL→MCZ 2026-10"
+    assert any(line.strip().startswith("2  v3 grouped_prices") for line in lines)
+    assert any("ERRO  v1 prices/calendar" in line for line in lines)
+    assert sum(line.startswith("==") for line in lines) == 2  # ida e volta

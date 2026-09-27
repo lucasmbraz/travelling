@@ -117,6 +117,10 @@ def build_report(cfg: Config, cash, award, promo_src, today: date, demo: bool = 
                 award=an.best_round_trips(rr.out_award, rr.back_award, w.start, w.end, w.min_stay, w.max_stay,
                                           points=True, extra_cost=route.extra_cost),
             ))
+        if not rr.out_cash or not rr.back_cash:
+            rep.errors.append(
+                f"{o}⇄{d}: nenhum preço em R$ encontrado "
+                f"(ida: {len(rr.out_cash)} dias, volta: {len(rr.back_cash)} dias)")
         rep.has_award_data |= bool(rr.out_award or rr.back_award)
         rep.routes.append(rr)
 

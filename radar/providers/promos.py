@@ -38,11 +38,22 @@ def _has_word(text: str, word: str) -> bool:
     return re.search(rf"\b{re.escape(_norm(word))}\b", text) is not None
 
 
+def _from_azul(title_n: str) -> bool:
+    """True quando o título fala de transferir pontos DA Azul para outro programa."""
+    if re.search(r"\bpara (a |o )?(azul|tudoazul)\b", title_n):
+        return False
+    return re.search(r"\b(azul|tudoazul)( fidelidade)? para\b", title_n) is not None
+
+
 def classify(title: str, summary: str = "") -> tuple[str, int | None, tuple[str, ...]]:
     """Classifica um post: tipo, maior % de bônus citado e programas mencionados."""
     text = _norm(f"{title} {summary}")
     title_n = _norm(title)
     programs = tuple(k for k, words in KNOWN_PROGRAMS.items() if any(_has_word(text, w) for w in words))
+    if "azul" in programs and _from_azul(title_n):
+        # Ex.: "bônus ao transferir pontos Azul para ALL Accor" tira pontos da Azul:
+        # não conta como promoção da Azul.
+        programs = tuple(p for p in programs if p != "azul")
     pcts = [int(p) for p in re.findall(r"(\d{2,3})\s*%\s*(?:de\s+)?(?:bonus|bonificac)", title_n)]
     bonus = max(pcts) if pcts else None
     if bonus is not None or ("transfer" in title_n and any(w in title_n for w in ("bonus", "ponto"))):

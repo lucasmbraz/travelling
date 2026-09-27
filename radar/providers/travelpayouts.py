@@ -107,3 +107,60 @@ class TravelpayoutsProvider:
                 provider=self.name,
             ))
         return deals
+
+
+# ---------------------------------------------------------------- diagnóstico
+
+def _count(data) -> int:
+    if isinstance(data, list):
+        return len(data)
+    if isinstance(data, dict):
+        # alguns endpoints devolvem {destino: {...}} ou {data: {...}}
+        return sum(_count(v) if isinstance(v, (dict, list)) and not {"price", "value"} & set(v) else 1
+                   for v in data.values()) if data else 0
+    return 0
+
+
+def diagnose(token: str, origin: str, destinations: list[str], months: list[tuple[int, int]]) -> list[str]:
+    """Roda variações de consulta para descobrir qual traz dados para as rotas."""
+
+    hdr = {"X-Access-Token": token}
+    lines = []
+    for dest in destinations:
+        for o, d in ((origin, dest), (dest, origin)):
+            for (y, m) in months:
+                ym = f"{y:04d}-{m:02d}"
+                variants = {
+                    "v3 prices_for_dates só ida (market=br)": ("/aviasales/v3/prices_for_dates", dict(
+                        origin=o, destination=d, departure_at=ym, one_way="true", sorting="price", limit=1000,
+                        currency="brl", market="br")),
+                    "v3 prices_for_dates só ida (sem market)": ("/aviasales/v3/prices_for_dates", dict(
+                        origin=o, destination=d, departure_at=ym, one_way="true", sorting="price", limit=1000,
+                        currency="brl")),
+                    "v3 prices_for_dates ida e volta": ("/aviasales/v3/prices_for_dates", dict(
+                        origin=o, destination=d, departure_at=ym, one_way="false", sorting="price", limit=1000,
+                        currency="brl")),
+                    "v3 grouped_prices por dia": ("/aviasales/v3/grouped_prices", dict(
+                        origin=o, destination=d, departure_at=ym, group_by="departure_at", currency="brl")),
+                    "v1 prices/calendar": ("/v1/prices/calendar", dict(
+                        origin=o, destination=d, depart_date=ym, calendar_type="departure_date", currency="brl")),
+                    "v2 prices/month-matrix": ("/v2/prices/month-matrix", dict(
+                        origin=o, destination=d, month=f"{ym}-01", currency="brl", show_to_affiliates="false")),
+                    "v2 prices/latest": ("/v2/prices/latest", dict(
+                        origin=o, destination=d, beginning_of_period=f"{ym}-01", period_type="month",
+                        one_way="true", limit=1000, currency="brl", show_to_affiliates="false")),
+                }
+                lines.append(f"== {o}→{d} {ym}")
+                for name, (path, params) in variants.items():
+                    try:
+                        resp = get_json(BASE + path, params=params, headers=hdr, retries=1)
+                        data = resp.get("data") if isinstance(resp, dict) else resp
+                        n = _count(data)
+                        sample = ""
+                        if n:
+                            first = data[0] if isinstance(data, list) else next(iter(data.values()))
+                            sample = " ex.: " + str(first)[:160]
+                        lines.append(f"   {n:4d}  {name}{sample}")
+                    except Exception as e:  # queremos ver todos os erros
+                        lines.append(f"   ERRO  {name}: {e}")
+    return lines

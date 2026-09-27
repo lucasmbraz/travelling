@@ -61,6 +61,10 @@ def cmd_painel(args) -> int:
     out.mkdir(parents=True, exist_ok=True)
     (out / "index.html").write_text(render(rep), encoding="utf-8")
     print(f"Painel gerado em {out / 'index.html'} — {len(alerts)} alerta(s), {len(rep.errors)} aviso(s).")
+    for rr in rep.routes:
+        print(f"  {cfg.origin}⇄{rr.route.destination}: preços em R$ para {len(rr.out_cash)} dias de ida e "
+              f"{len(rr.back_cash)} de volta; pontos para {len(rr.out_award)}/{len(rr.back_award)} dias")
+    print(f"  qualquer destino: {len(rep.deals)} destinos; promoções relevantes: {len(rep.promos)}")
     for e in rep.errors:
         print(f"  aviso: {e}")
 
@@ -124,6 +128,21 @@ def cmd_pontos(args) -> int:
     return 0
 
 
+def cmd_diagnostico(args) -> int:
+    """Testa várias formas de consultar a Travelpayouts e mostra quantos preços cada uma traz."""
+    from radar.providers.travelpayouts import diagnose
+
+    token = os.environ.get("TRAVELPAYOUTS_TOKEN")
+    if not token:
+        sys.exit("Defina TRAVELPAYOUTS_TOKEN.")
+    cfg = load_config(args.config)
+    months = cfg.months_ahead(date.today(), args.meses)
+    dests = [r.destination for r in cfg.routes]
+    for line in diagnose(token, cfg.origin, dests, months):
+        print(line)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="radar", description="Radar pessoal de passagens baratas")
     p.add_argument("--config", default="config.yaml")
@@ -150,6 +169,10 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("necessarios", type=int)
     s.add_argument("--bonus", nargs="*", help="ex.: livelo=100 cartao=80")
     s.set_defaults(fn=cmd_pontos)
+
+    s = sub.add_parser("diagnostico", help="testa as consultas de preço e mostra quanto dado cada uma traz")
+    s.add_argument("--meses", type=int, default=3)
+    s.set_defaults(fn=cmd_diagnostico)
 
     args = p.parse_args(argv)
     return args.fn(args)

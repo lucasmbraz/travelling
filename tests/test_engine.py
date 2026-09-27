@@ -58,3 +58,14 @@ def test_alert_priorities():
     assert by_title["💳 [EXEMPLO] Inter Loop: ganhe 80% de bônus ao transferir pontos para a Azul"] == PRIORITY_URGENT
     assert by_title["🏷️ [EXEMPLO] Passagens de Belém para Lima a partir de R$ 899 ida e volta"] == PRIORITY_LOW
     assert all(p == PRIORITY_URGENT for t, p in by_title.items() if "abaixo do alvo" in t)
+
+
+def test_empty_route_is_reported():
+    class Empty(DemoCashProvider):
+        def one_way_month(self, *a):
+            return []
+
+    cfg = load_config("config.yaml", TODAY)
+    rep = build_report(cfg, Empty(), None, None, TODAY)
+    assert any("BEL⇄MCZ: nenhum preço" in e for e in rep.errors)
+    assert "Sem dados de preço" in render(rep)
