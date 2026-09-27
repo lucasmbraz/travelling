@@ -285,6 +285,7 @@ def _calendars(title: str, by_day: dict[date, Offer], points: bool, open_: bool 
             v = value(o)
             txt = kpts(v) if points else brl(v).replace("R$ ", "")
             tip = f"{day:02d}/{m:02d}: " + (f"{pts(v)} pontos + {brl(o.price)}" if points else brl(v))
+            tip += f" · {o.provider}" if o.provider else ""
             cells.append(f"<div class='day lv{level(v)}' title='{escape(tip, quote=True)}'><i>{day}</i><b>{txt}</b></div>")
         cals.append(f"<div class='cal'><h4>{MONTHS[m]} {y}</h4><div class='grid'>{''.join(cells)}</div></div>")
     legend = ("<div class='legend'>mais barato <span class='lv0'></span><span class='lv1'></span><span class='lv2'>"
@@ -310,10 +311,9 @@ def _anywhere(rep: Report) -> str:
             rows.append(
                 f"<tr class='{'best' if hot else ''}'><td>{escape(label(dl.destination))}{' 🔥' if hot else ''}</td>"
                 f"<td>{dm(dl.depart)}</td><td>{ret}</td><td class='num'>{nights}</td><td class='num'>{brl(dl.price)}</td>"
-                f"<td>{a(dl.link or links.google_flights(cfg.origin, dl.destination, dl.depart, dl.ret), 'Ver')} · "
-                f"{a(links.google_flights(cfg.origin, dl.destination, dl.depart, dl.ret), 'Google Voos')}</td></tr>")
+                f"<td class='muted'>{escape(dl.provider)}</td><td>{_deal_links(cfg, dl)}</td></tr>")
         out.append("<div class='scroll'><table><thead><tr><th>Destino</th><th>Ida</th><th>Volta</th><th>Noites</th>"
-                   "<th>Total</th><th>Links</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
+                   "<th>Total</th><th>Fonte</th><th>Conferir</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
         if cfg.anywhere_max_price:
             out.append(f"<p class='small muted'>🔥 = abaixo de {brl(cfg.anywhere_max_price)} (você é avisado).</p>")
     else:
@@ -329,6 +329,13 @@ def _anywhere(rep: Report) -> str:
                    + "".join(rows) + "</tbody></table></div>")
     out.append("</section>")
     return "".join(out)
+
+
+def _deal_links(cfg, dl) -> str:
+    google = a(links.google_flights(cfg.origin, dl.destination, dl.depart, dl.ret), "Google Voos")
+    if dl.link and "google.com" not in dl.link:
+        return a(dl.link, "Oferta") + " · " + google
+    return google
 
 
 def _promos(rep: Report) -> str:
@@ -348,6 +355,8 @@ def _promos(rep: Report) -> str:
 
 
 def _footer(rep: Report) -> str:
-    return ("<p class='muted small'>Preços em dinheiro vêm de buscas recentes (cache da Aviasales) e podem ter mudado; "
-            "pontos vêm do Seats.aero. Sempre confira no site da companhia antes de comprar ou transferir pontos — "
-            "transferências são irreversíveis.</p>")
+    counts = ", ".join(f"{escape(k)} ({v} preços)" for k, v in rep.source_counts.items()) or "nenhuma"
+    return (f"<p class='muted small'>Fontes desta atualização: {counts}. Preços em R$ combinam o Google Voos "
+            "(menor preço de cada dia) com o cache de buscas da Travelpayouts/Aviasales; em cada dia vale o mais "
+            "barato. Pontos vêm do Seats.aero quando configurado. Sempre confira no site da companhia antes de "
+            "comprar ou transferir pontos — transferências são irreversíveis.</p>")

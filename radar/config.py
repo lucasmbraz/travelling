@@ -48,6 +48,10 @@ class Config:
     anywhere_months: int = 3
     anywhere_max_price: float | None = None
     anywhere_exclude: list[str] = field(default_factory=list)
+    anywhere_candidates: list[str] = field(default_factory=list)
+    anywhere_min_stay: int = 3
+    anywhere_max_stay: int = 10
+    anywhere_max_dest: int = 15
     feeds: list[str] = field(default_factory=list)
     promo_recent_days: int = 10
     drop_pct: float = 10.0
@@ -142,6 +146,10 @@ def load_config(path: str | Path, today: date | None = None) -> Config:
         anywhere_months=int(anywhere.get("meses_a_frente", 3)),
         anywhere_max_price=anywhere.get("preco_max_alerta"),
         anywhere_exclude=[c.upper() for c in anywhere.get("excluir", [])],
+        anywhere_candidates=[c.upper() for c in anywhere.get("candidatos", [])],
+        anywhere_min_stay=int(anywhere.get("estadia_min", 3)),
+        anywhere_max_stay=int(anywhere.get("estadia_max", 10)),
+        anywhere_max_dest=int(anywhere.get("max_destinos", 15)),
         feeds=list(promos.get("feeds", [])),
         promo_recent_days=int(promos.get("dias_recentes", 10)),
         drop_pct=float(alerts.get("queda_minima_pct", 10)),

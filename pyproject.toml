@@ -7,7 +7,7 @@ name = "radar-passagens"
 version = "0.1.0"
 description = "Radar pessoal de passagens baratas (dinheiro e pontos) e promoções de milhas"
 requires-python = ">=3.10"
-dependencies = ["requests>=2.31", "PyYAML>=6.0"]
+dependencies = ["requests>=2.31", "PyYAML>=6.0", "flights>=0.9"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]

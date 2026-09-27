@@ -7,6 +7,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from radar import analysis as an
+from radar import links
 from radar.airports import city, label
 from radar.config import Config, Route, Window
 from radar.models import Deal, Offer, Promo, Trip
@@ -62,19 +63,12 @@ class Report:
     alerts: list[Alert] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
     has_award_data: bool = False
+    source_counts: dict[str, int] = field(default_factory=dict)  # preços recebidos por fonte
     generated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat(timespec="minutes"))
 
     @property
     def bonus_pcts(self) -> dict[str, float]:
         return {k: float(p.bonus_pct or 0) for k, p in self.bonuses.items()}
-
-
-def _months_between(start: date, end: date) -> list[tuple[int, int]]:
-    out, y, m = [], start.year, start.month
-    while (y, m) <= (end.year, end.month):
-        out.append((y, m))
-        y, m = (y + 1, 1) if m == 12 else (y, m + 1)
-    return out
 
 
 def _safe(errors: list[str], what: str, fn, default):
@@ -85,24 +79,33 @@ def _safe(errors: list[str], what: str, fn, default):
         return default
 
 
-def build_report(cfg: Config, cash, award, promo_src, today: date, demo: bool = False) -> Report:
+def build_report(cfg: Config, cash: list, award, promo_src, today: date, demo: bool = False) -> Report:
+    """Monta o relatório combinando todas as fontes de preço em ``cash``.
+
+    Para cada dia fica o menor preço entre as fontes; se uma fonte falhar, as
+    outras continuam e o erro vai para os avisos.
+    """
     rep = Report(cfg=cfg, today=today, demo=demo)
     start, end = cfg.horizon(today)
-    months = _months_between(start, end)
+
+    def fetch(o: str, d: str, s: date, e: date, providers) -> list[Offer]:
+        offers: list[Offer] = []
+        for p in providers:
+            got = _safe(rep.errors, f"{p.name} {o}→{d}", lambda: p.one_way_range(o, d, s, e), [])
+            rep.source_counts[p.name] = rep.source_counts.get(p.name, 0) + len(got)
+            offers += got
+        return [x for x in offers if x.day > today]
 
     # --- rotas fixas (Maceió, Recife...) -----------------------------------
     for route in cfg.routes:
         o, d = cfg.origin, route.destination
-        outs, backs = [], []
-        for (y, m) in months:
-            outs += _safe(rep.errors, f"preços {o}→{d} {m:02d}/{y}", lambda: cash.one_way_month(o, d, y, m), [])
-            backs += _safe(rep.errors, f"preços {d}→{o} {m:02d}/{y}", lambda: cash.one_way_month(d, o, y, m), [])
+        outs, backs = fetch(o, d, start, end, cash), fetch(d, o, start, end, cash)
         a_out, a_back = [], []
         if award:
             a_out = _safe(rep.errors, f"pontos {o}→{d}", lambda: award.one_way(o, [d], start, end), [])
             a_back = _safe(rep.errors, f"pontos {d}→{o}", lambda: award.one_way(d, [o], start, end), [])
         future = lambda xs: [x for x in xs if x.day > today]  # noqa: E731
-        outs, backs, a_out, a_back = future(outs), future(backs), future(a_out), future(a_back)
+        a_out, a_back = future(a_out), future(a_back)
         rr = RouteReport(
             route=route,
             out_cash=an.cheapest_by_day(outs), back_cash=an.cheapest_by_day(backs),
@@ -125,10 +128,41 @@ def build_report(cfg: Config, cash, award, promo_src, today: date, demo: bool = 
         rep.routes.append(rr)
 
     # --- qualquer destino ----------------------------------------------------
-    deals = []
-    for (y, m) in cfg.months_ahead(today, cfg.anywhere_months):
-        deals += _safe(rep.errors, f"qualquer destino {m:02d}/{y}", lambda: cash.anywhere_month(cfg.origin, y, m), [])
+    # 1) cache de buscas (Travelpayouts): descobre destinos que você nem pensou.
+    deals: list[Deal] = []
+    for p in cash:
+        if not hasattr(p, "anywhere_month"):
+            continue
+        for (y, m) in cfg.months_ahead(today, cfg.anywhere_months):
+            got = _safe(rep.errors, f"{p.name} qualquer destino {m:02d}/{y}",
+                        lambda: p.anywhere_month(cfg.origin, y, m), [])
+            rep.source_counts[p.name] = rep.source_counts.get(p.name, 0) + len(got)
+            deals += got
     deals = [d for d in deals if d.depart > today]
+
+    # 2) calendário completo (Google Voos) para os candidatos + o que o cache achou.
+    calendar_sources = [p for p in cash if getattr(p, "calendar", False)]
+    if calendar_sources:
+        a_start, a_end = today + timedelta(days=1), today + timedelta(days=30 * cfg.anywhere_months)
+        found = [x.destination for x in an.best_deals(deals, cfg.anywhere_exclude, top=50)]
+        route_dests = {r.destination for r in cfg.routes}
+        candidates = []
+        for code in cfg.anywhere_candidates + found:
+            if code not in candidates and code != cfg.origin and code not in cfg.anywhere_exclude \
+                    and code not in route_dests:
+                candidates.append(code)
+        for dest in candidates[:cfg.anywhere_max_dest]:
+            outs = an.cheapest_by_day(fetch(cfg.origin, dest, a_start, a_end, calendar_sources))
+            if not outs:
+                continue
+            backs = an.cheapest_by_day(fetch(dest, cfg.origin, a_start, a_end, calendar_sources))
+            trips = an.best_round_trips(outs, backs, a_start, a_end, cfg.anywhere_min_stay,
+                                        cfg.anywhere_max_stay, top=1)
+            if trips:
+                t = trips[0]
+                deals.append(Deal(cfg.origin, dest, t.out.day, t.back.day, t.total_price,
+                                  link=links.google_flights(cfg.origin, dest, t.out.day, t.back.day),
+                                  provider=t.out.provider))
     rep.deals = an.best_deals(deals, cfg.anywhere_exclude)
     if award:
         a_end = today + timedelta(days=30 * cfg.anywhere_months)
@@ -205,7 +239,6 @@ def compute_alerts(rep: Report, state: dict) -> list[Alert]:
     cfg, today = rep.cfg, rep.today
     history = state.setdefault("history", {})
     alerts: list[Alert] = []
-    from radar import links
 
     for rr in rep.routes:
         r = rr.route

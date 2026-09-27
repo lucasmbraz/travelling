@@ -10,7 +10,7 @@ TODAY = date(2026, 9, 27)
 
 def report(tmp_config="config.yaml"):
     cfg = load_config(tmp_config, TODAY)
-    return build_report(cfg, DemoCashProvider(), DemoAwardProvider(), DemoPromoProvider(TODAY), TODAY, demo=True)
+    return build_report(cfg, [DemoCashProvider()], DemoAwardProvider(), DemoPromoProvider(TODAY), TODAY, demo=True)
 
 
 def test_report_has_routes_windows_and_no_past_dates():
@@ -62,10 +62,41 @@ def test_alert_priorities():
 
 def test_empty_route_is_reported():
     class Empty(DemoCashProvider):
-        def one_way_month(self, *a):
+        def one_way_range(self, *a):
             return []
 
     cfg = load_config("config.yaml", TODAY)
-    rep = build_report(cfg, Empty(), None, None, TODAY)
+    rep = build_report(cfg, [Empty()], None, None, TODAY)
     assert any("BEL⇄MCZ: nenhum preço" in e for e in rep.errors)
     assert "Sem dados de preço" in render(rep)
+
+
+def test_sources_are_combined_cheapest_wins_and_failures_are_isolated():
+    from datetime import timedelta
+
+    from radar.models import Offer
+
+    day = TODAY + timedelta(days=80)
+
+    class Source:
+        def __init__(self, name, price, fail=False):
+            self.name, self.price, self.fail = name, price, fail
+
+        def one_way_range(self, o, d, start, end):
+            if self.fail:
+                raise RuntimeError("fora do ar")
+            return [Offer(o, d, day, self.price, provider=self.name)]
+
+    cfg = load_config("config.yaml", TODAY)
+    rep = build_report(cfg, [Source("A", 700), Source("B", 500), Source("C", 0, fail=True)], None, None, TODAY)
+    mcz = rep.routes[0]
+    assert mcz.out_cash[day].price == 500 and mcz.out_cash[day].provider == "B"
+    assert any(e.startswith("C BEL→MCZ: fora do ar") for e in rep.errors)
+    assert rep.source_counts["A"] > 0 and rep.source_counts["B"] > 0
+
+
+def test_anywhere_combines_cache_and_calendar():
+    rep = report()
+    dests = {d.destination for d in rep.deals}
+    assert {"LIM", "FOR", "NAT"} <= dests  # candidatos do config (NAT só existe como candidato)
+    assert all(d.depart > TODAY for d in rep.deals)

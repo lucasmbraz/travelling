@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import argparse
 import os
-import sys
 from datetime import date
 from pathlib import Path
 
@@ -25,15 +24,18 @@ def _providers(cfg, demo: bool, today: date):
     from radar.providers.promos import PromoProvider
 
     if demo:
-        return demo_mod.DemoCashProvider(), demo_mod.DemoAwardProvider(), demo_mod.DemoPromoProvider(today)
-    tp_token = os.environ.get("TRAVELPAYOUTS_TOKEN")
-    seats_key = os.environ.get("SEATS_AERO_KEY")
-    if not tp_token:
-        sys.exit("Defina TRAVELPAYOUTS_TOKEN (grátis em travelpayouts.com) ou use --demo.")
-    from radar.providers.travelpayouts import TravelpayoutsProvider
+        return [demo_mod.DemoCashProvider()], demo_mod.DemoAwardProvider(), demo_mod.DemoPromoProvider(today)
+    from radar.providers.google import GoogleFlightsProvider
 
-    cash = TravelpayoutsProvider(tp_token)
+    # Fontes de preço em R$, combinadas: para cada dia vale a mais barata.
+    cash: list = [GoogleFlightsProvider()]
+    tp_token = os.environ.get("TRAVELPAYOUTS_TOKEN")
+    if tp_token:
+        from radar.providers.travelpayouts import TravelpayoutsProvider
+
+        cash.append(TravelpayoutsProvider(tp_token))
     award = None
+    seats_key = os.environ.get("SEATS_AERO_KEY")
     if seats_key:
         from radar.providers.seatsaero import SeatsAeroProvider
 
@@ -65,6 +67,8 @@ def cmd_painel(args) -> int:
         print(f"  {cfg.origin}⇄{rr.route.destination}: preços em R$ para {len(rr.out_cash)} dias de ida e "
               f"{len(rr.back_cash)} de volta; pontos para {len(rr.out_award)}/{len(rr.back_award)} dias")
     print(f"  qualquer destino: {len(rep.deals)} destinos; promoções relevantes: {len(rep.promos)}")
+    print("  preços recebidos por fonte: "
+          + (", ".join(f"{k}: {v}" for k, v in rep.source_counts.items()) or "nenhum"))
     for e in rep.errors:
         print(f"  aviso: {e}")
 
@@ -87,13 +91,8 @@ def cmd_datas(args) -> int:
     cash, award, _ = _providers(cfg, args.demo, today)
     o, d = cfg.origin, args.destino.upper()
     start, end = date.fromisoformat(args.de), date.fromisoformat(args.ate)
-    months = []
-    y, m = start.year, start.month
-    while (y, m) <= (end.year, end.month):
-        months.append((y, m))
-        y, m = (y + 1, 1) if m == 12 else (y, m + 1)
-    outs = an.cheapest_by_day(x for (y, m) in months for x in cash.one_way_month(o, d, y, m))
-    backs = an.cheapest_by_day(x for (y, m) in months for x in cash.one_way_month(d, o, y, m))
+    outs = an.cheapest_by_day(x for p in cash for x in p.one_way_range(o, d, start, end))
+    backs = an.cheapest_by_day(x for p in cash for x in p.one_way_range(d, o, start, end))
     w = Window("busca", start, end, args.min, args.max)
     trips = an.best_round_trips(outs, backs, w.start, w.end, w.min_stay, w.max_stay, top=args.top)
     print(f"{label(o)} ⇄ {label(d)} · ida a partir de {start:%d/%m/%Y}, volta até {end:%d/%m/%Y}, "
@@ -132,14 +131,17 @@ def cmd_diagnostico(args) -> int:
     """Testa várias formas de consultar a Travelpayouts e mostra quantos preços cada uma traz."""
     from radar.providers.travelpayouts import diagnose
 
-    token = os.environ.get("TRAVELPAYOUTS_TOKEN")
-    if not token:
-        sys.exit("Defina TRAVELPAYOUTS_TOKEN.")
+    from radar.providers.google import diagnose as diagnose_google
+
     cfg = load_config(args.config)
-    months = cfg.months_ahead(date.today(), args.meses)
     dests = [r.destination for r in cfg.routes]
-    for line in diagnose(token, cfg.origin, dests, months):
+    for line in diagnose_google(cfg.origin, dests, date.today(), args.meses):
         print(line)
+    token = os.environ.get("TRAVELPAYOUTS_TOKEN")
+    if token:
+        months = cfg.months_ahead(date.today(), args.meses)
+        for line in diagnose(token, cfg.origin, dests, months):
+            print(line)
     return 0
 
 

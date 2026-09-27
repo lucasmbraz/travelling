@@ -39,13 +39,7 @@ jobs:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           SALDOS: ${{ secrets.SALDOS }}
           DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
-        run: |
-          if [ -n "$TRAVELPAYOUTS_TOKEN" ]; then
-            python -m radar painel
-          else
-            echo "::warning::TRAVELPAYOUTS_TOKEN não configurado — gerando painel de demonstração"
-            python -m radar --demo painel
-          fi
+        run: python -m radar painel
 
       - name: Guardar histórico de preços
         run: |

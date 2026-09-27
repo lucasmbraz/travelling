@@ -21,7 +21,9 @@ push no Android, pelo app gratuito [ntfy](https://ntfy.sh).
 
 ```
 GitHub Actions (3x por dia)
-   ├─ Travelpayouts/Aviasales → preços em R$ por dia, qualquer destino
+   ├─ Google Voos             → menor preço em R$ de cada dia (calendário completo)
+   ├─ Travelpayouts/Aviasales → cache de buscas: preços e destinos que outras pessoas acharam
+   │     (as duas fontes são combinadas: em cada dia vale a mais barata)
    ├─ Seats.aero (opcional)   → resgates reais em pontos Azul Fidelidade
    └─ RSS dos blogs de milhas → promoções e bônus de transferência
         ↓
@@ -32,9 +34,10 @@ GitHub Actions (3x por dia)
 
 ## Configurar (uns 20 minutos, uma vez só)
 
-### 1. Token de preços (grátis)
-Crie uma conta em [travelpayouts.com](https://www.travelpayouts.com/), vá em
-**Perfil → API token** e copie o token.
+### 1. Token de preços (grátis, recomendado)
+Os preços do Google Voos não precisam de chave. A Travelpayouts é uma segunda fonte que
+complementa o Google e descobre destinos baratos: crie uma conta em
+[travelpayouts.com](https://www.travelpayouts.com/), vá em **Perfil → API token** e copie o token.
 
 ### 2. Notificações no Android (grátis, sem cadastro)
 1. Instale o **ntfy** pela [Play Store](https://play.google.com/store/apps/details?id=io.heckel.ntfy)
@@ -114,9 +117,13 @@ Testes: `pip install -e '.[dev]' && pytest`.
 
 ## Limitações honestas
 
-- **Preços em reais** vêm do cache de buscas da Aviasales (últimos dias). Para rotas menos
-  buscadas alguns dias ficam sem preço (cinza no calendário) e o valor pode ter mudado —
-  por isso cada linha tem link para conferir no Google Voos e na Azul.
+- **Preços em reais** combinam duas fontes. O Google Voos traz o menor preço de cada dia, mas
+  é acessado por uma biblioteca não oficial ([fli](https://github.com/punitarani/fli)): se o
+  Google mudar algo, pode parar até a biblioteca ser atualizada. A Travelpayouts é oficial,
+  mas só tem o que outras pessoas buscaram nos últimos dias (para Belém–Maceió quase nada).
+  Se uma fonte falhar, o radar segue com a outra e mostra o problema em "Avisos" no painel.
+  Para investigar, rode a Action **Diagnóstico de preços**: ela mostra quantos preços cada
+  fonte trouxe para cada trecho.
 - **Pontos Azul** só são reais com o Seats.aero; sem ele é estimativa.
 - **Promoções** são detectadas pelo título dos posts. O percentual mostrado é o "até X%"
   anunciado — o bônus que você recebe depende do Clube Azul e das regras de cada campanha.

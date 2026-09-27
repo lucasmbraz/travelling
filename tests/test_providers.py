@@ -60,7 +60,7 @@ def test_diagnose_reports_counts_and_errors(monkeypatch):
 
     monkeypatch.setattr(travelpayouts, "get_json", fake)
     lines = travelpayouts.diagnose("t", "BEL", ["MCZ"], [(2026, 10)])
-    assert lines[0] == "== BEL→MCZ 2026-10"
+    assert lines[:2] == ["### Travelpayouts", "== BEL→MCZ 2026-10"]
     assert any(line.strip().startswith("2  v3 grouped_prices") for line in lines)
     assert any("ERRO  v1 prices/calendar" in line for line in lines)
     assert sum(line.startswith("==") for line in lines) == 2  # ida e volta

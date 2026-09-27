@@ -12,7 +12,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install .
-      - name: Testar consultas na Travelpayouts
+      - name: Testar consultas no Google Voos e na Travelpayouts
         env:
           TRAVELPAYOUTS_TOKEN: ${{ secrets.TRAVELPAYOUTS_TOKEN }}
         run: python -m radar diagnostico --meses 3

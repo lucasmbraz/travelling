@@ -33,7 +33,7 @@ def _link(path: str | None) -> str:
 
 
 class TravelpayoutsProvider:
-    name = "travelpayouts"
+    name = "Travelpayouts"
 
     def __init__(self, token: str, market: str = "br", currency: str = "brl"):
         self.token = token
@@ -70,6 +70,14 @@ class TravelpayoutsProvider:
         for row in (grouped.values() if isinstance(grouped, dict) else grouped):
             offers.append(self._offer(row, origin, destination))
         return [o for o in offers if o.day and o.price > 0]
+
+    def one_way_range(self, origin: str, destination: str, start: date, end: date) -> list[Offer]:
+        offers: list[Offer] = []
+        y, m = start.year, start.month
+        while (y, m) <= (end.year, end.month):
+            offers += self.one_way_month(origin, destination, y, m)
+            y, m = (y + 1, 1) if m == 12 else (y, m + 1)
+        return [o for o in offers if start <= o.day <= end]
 
     def _offer(self, row: dict, origin: str, destination: str) -> Offer:
         return Offer(
@@ -125,7 +133,7 @@ def diagnose(token: str, origin: str, destinations: list[str], months: list[tupl
     """Roda variações de consulta para descobrir qual traz dados para as rotas."""
 
     hdr = {"X-Access-Token": token}
-    lines = []
+    lines = ["### Travelpayouts"]
     for dest in destinations:
         for o, d in ((origin, dest), (dest, origin)):
             for (y, m) in months:

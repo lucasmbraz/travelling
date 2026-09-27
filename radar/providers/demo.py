@@ -34,6 +34,7 @@ def demo_price(origin: str, dest: str, d: date) -> float:
 
 class DemoCashProvider:
     name = "demo"
+    calendar = True
 
     def one_way_month(self, origin: str, destination: str, year: int, month: int) -> list[Offer]:
         days = calendar.monthrange(year, month)[1]
@@ -46,6 +47,13 @@ class DemoCashProvider:
                              airline=AIRLINES[int(_noise("al", d) * 3)], transfers=int(_noise("tr", d) * 2),
                              link="https://www.aviasales.com", provider=self.name))
         return out
+
+    def one_way_range(self, origin: str, destination: str, start: date, end: date) -> list[Offer]:
+        out, y, m = [], start.year, start.month
+        while (y, m) <= (end.year, end.month):
+            out += self.one_way_month(origin, destination, y, m)
+            y, m = (y + 1, 1) if m == 12 else (y, m + 1)
+        return [o for o in out if start <= o.day <= end]
 
     def anywhere_month(self, origin: str, year: int, month: int) -> list[Deal]:
         deals = []

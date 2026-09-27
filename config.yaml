@@ -55,9 +55,15 @@ janelas:
     estadia_max: 14
 
 # "Para onde dá pra ir barato?" — ofertas saindo da origem para qualquer lugar.
+# O radar junta duas fontes: os destinos que aparecem no cache da Travelpayouts e
+# a lista de "candidatos" abaixo, que é conferida dia a dia no Google Voos.
 qualquer_destino:
   meses_a_frente: 3
   preco_max_alerta: 1200     # avisa quando ida+volta ficar abaixo disso
+  estadia_min: 3             # noites
+  estadia_max: 10
+  max_destinos: 15           # quantos destinos conferir no Google Voos por rodada
+  candidatos: [FOR, SLZ, REC, SSA, NAT, MAO, BSB, GRU, GIG, CNF, FLN, LIM, BOG, CAY, MIA, LIS]
   excluir: []                # códigos IATA que você não quer ver
 
 # Promoções: feeds RSS de blogs de milhas e passagens.
