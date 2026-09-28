@@ -1,0 +1,11 @@
+# Preços em pontos que você viu no site da Azul (por pessoa, SÓ IDA, tarifa mais barata).
+# O radar compara com o preço da Azul em R$ no mesmo dia e aprende quantos pontos
+# vale cada real. Quanto mais anotações (e mais recentes), melhor a estimativa.
+#
+# Se anotar também o preço em R$ que o site mostrou para o mesmo voo ("reais"),
+# a conta fica ainda mais precisa.
+#
+# Exemplo (apague o # para usar):
+# - {data: 2026-12-18, de: BEL, para: MCZ, pontos: 32000, reais: 780}
+# - {data: 2027-01-10, de: MCZ, para: BEL, pontos: 28500}
+[]

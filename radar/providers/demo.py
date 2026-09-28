@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import calendar
 import hashlib
+from dataclasses import replace
 from datetime import date, timedelta
 
 from radar.models import Deal, Offer, Promo
@@ -48,12 +49,20 @@ class DemoCashProvider:
                              link="https://www.aviasales.com", provider=self.name))
         return out
 
-    def one_way_range(self, origin: str, destination: str, start: date, end: date) -> list[Offer]:
+    def one_way_range(self, origin: str, destination: str, start: date, end: date,
+                      adults: int = 1, children: int = 0, airline: str | None = None) -> list[Offer]:
         out, y, m = [], start.year, start.month
         while (y, m) <= (end.year, end.month):
             out += self.one_way_month(origin, destination, y, m)
             y, m = (y + 1, 1) if m == 12 else (y, m + 1)
-        return [o for o in out if start <= o.day <= end]
+        n = adults + children
+        # grupos grandes às vezes não cabem na tarifa mais barata
+        bump = 1.0 if n <= 2 else 1.08
+        out = [replace(o, price=round(o.price * n * (bump if _noise("pax", o.day) > 0.6 else 1.0)),
+                       airline=airline or o.airline) for o in out if start <= o.day <= end]
+        if airline:
+            out = [replace(o, price=round(o.price * 1.05)) for o in out]  # só a Azul: um pouco mais caro
+        return out
 
     def anywhere_month(self, origin: str, year: int, month: int) -> list[Deal]:
         deals = []

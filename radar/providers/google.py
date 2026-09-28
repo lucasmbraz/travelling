@@ -41,8 +41,13 @@ class GoogleFlightsProvider:
             self._search = SearchDates()
         return self._search
 
-    def one_way_range(self, origin: str, destination: str, start: date, end: date) -> list[Offer]:
-        from fli.models import DateSearchFilters, FlightSegment, PassengerInfo, TripType
+    def one_way_range(self, origin: str, destination: str, start: date, end: date,
+                      adults: int = 1, children: int = 0, airline: str | None = None) -> list[Offer]:
+        """Menor preço de cada dia, já somado para todos os passageiros.
+
+        ``airline`` (ex.: "AD") restringe a uma companhia.
+        """
+        from fli.models import Airline, DateSearchFilters, FlightSegment, PassengerInfo, TripType
 
         today = date.today()
         start = max(start, today + timedelta(days=1))
@@ -51,7 +56,8 @@ class GoogleFlightsProvider:
             return []
         filters = DateSearchFilters(
             trip_type=TripType.ONE_WAY,
-            passenger_info=PassengerInfo(adults=1),
+            passenger_info=PassengerInfo(adults=adults, children=children),
+            airlines=[Airline[airline]] if airline else None,
             flight_segments=[FlightSegment(
                 departure_airport=[[_airport(origin), 0]],
                 arrival_airport=[[_airport(destination), 0]],
@@ -68,7 +74,7 @@ class GoogleFlightsProvider:
                 continue  # evita misturar moedas se o Google ignorar o pedido
             d = r.date[0].date() if isinstance(r.date[0], datetime) else r.date[0]
             if r.price and start <= d <= end:
-                offers.append(Offer(origin, destination, d, float(r.price),
+                offers.append(Offer(origin, destination, d, float(r.price), airline=airline or "",
                                     link=links.google_flights(origin, destination, d), provider=self.name))
         return offers
 

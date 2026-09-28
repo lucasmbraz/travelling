@@ -8,7 +8,7 @@ from html import escape
 from radar import analysis as an
 from radar import links
 from radar.airports import city, label
-from radar.engine import Report, RouteReport, WindowResult
+from radar.engine import Report, RouteReport
 from radar.models import Offer, Trip
 
 MONTHS = ["", "janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
@@ -56,7 +56,7 @@ h1{font-size:1.6rem;margin:.2em 0}h2{font-size:1.25rem;margin:0 0 .4em}h3{font-s
 .good{background:var(--good);color:var(--good-ink);border-radius:10px;padding:10px 14px;margin:10px 0}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
 .kpi{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.kpi b{display:block;font-size:1.3rem}.kpi span{color:var(--muted);font-size:.85rem}
+.kpi b{display:block;font-size:1.3rem}.kpi span{display:block;color:var(--muted);font-size:.85rem}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:.92rem}
 th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -157,16 +157,21 @@ def _route(rep: Report, rr: RouteReport) -> str:
                    + (f" ({escape(r.note)})" if r.note else ""))
     out.append("</div>")
 
-    if not rr.out_cash and not rr.out_award:
-        out.append("<p class='muted'>Sem dados de preço para essa rota ainda. As fontes funcionam a partir de buscas "
-                   "recentes; tente de novo mais tarde.</p></section>")
+    main = rr.main
+    if not main.out_cash and not rr.out_award:
+        out.append("<p class='muted'>Sem dados de preço para essa rota agora. Veja os avisos no fim da página.</p>"
+                   "</section>")
         return "".join(out)
 
-    for wr in rr.windows:
-        out.append(_window(rep, rr, wr))
+    for w in cfg.windows:
+        out.append(_window(rep, rr, w))
 
-    out.append(_calendars(f"Calendário de preços — ida ({city(o)} → {city(d)})", rr.out_cash, False, open_=True))
-    out.append(_calendars(f"Calendário de preços — volta ({city(d)} → {city(o)})", rr.back_cash, False))
+    n = main.group.size
+    who = f"por pessoa, {escape(main.group.name)}" if n > 1 else "R$"
+    out.append(_calendars(f"Calendário de preços — ida ({city(o)} → {city(d)})", main.out_cash, False,
+                          open_=True, divisor=n, unit=who))
+    out.append(_calendars(f"Calendário de preços — volta ({city(d)} → {city(o)})", main.back_cash, False,
+                          divisor=n, unit=who))
     if rr.out_award or rr.back_award:
         out.append(_calendars(f"Calendário em pontos Azul — ida ({city(o)} → {city(d)})", rr.out_award, True))
         out.append(_calendars(f"Calendário em pontos Azul — volta ({city(d)} → {city(o)})", rr.back_award, True))
@@ -174,72 +179,111 @@ def _route(rep: Report, rr: RouteReport) -> str:
     return "".join(out)
 
 
-def _window(rep: Report, rr: RouteReport, wr: WindowResult) -> str:
-    cfg, r, w = rep.cfg, rr.route, wr.window
-    o, d = cfg.origin, r.destination
+def _group_box(g, t: Trip) -> str:
+    n = g.size
+    per = f"<span>{brl(t.total_price / n)} por pessoa</span>" if n > 1 else ""
+    return (f"<div class='kpi'><span>{escape(g.name)} · {escape(g.label)}</span><b>{brl(t.total_price)}</b>{per}"
+            f"<span>{dm(t.out.day)} → {dm(t.back.day)} · {t.nights} noites</span></div>")
+
+
+def _trips_table(cfg, r, g, trips: list[Trip]) -> str:
+    o, d, n = cfg.origin, r.destination, g.size
+    rows = []
+    for i, t in enumerate(trips):
+        rows.append(
+            f"<tr class='{'best' if i == 0 else ''}'><td>{dm(t.out.day)} → {dm(t.back.day)}</td>"
+            f"<td class='num'>{t.nights}</td>"
+            + (f"<td class='num'>{brl(t.total_price / n)}</td>" if n > 1 else "")
+            + f"<td class='num'>{brl(t.total_price)}</td>"
+            f"<td>{a(links.google_flights(o, d, t.out.day, t.back.day, g.adults, g.children), 'Google Voos')} · "
+            f"{a(links.azul(o, d, t.out.day, t.back.day, False, g.adults, g.children), 'Azul')}</td></tr>")
+    head = ("<tr><th>Ida → volta</th><th>Noites</th>" + ("<th>Por pessoa</th>" if n > 1 else "")
+            + "<th>Total</th><th>Conferir</th></tr>")
+    return ("<div class='scroll'><table><thead>" + head + "</thead><tbody>" + "".join(rows)
+            + "</tbody></table></div>")
+
+
+def _window(rep: Report, rr: RouteReport, w) -> str:
+    cfg, r = rep.cfg, rr.route
     out = [f"<h3>{escape(w.name)} <span class='tag'>{w.start:%d/%m/%y} a {w.end:%d/%m/%y} · "
            f"{w.min_stay}–{w.max_stay} noites</span></h3>"]
-    if wr.cash:
-        best = wr.cash[0]
-        out.append(f"<div class='good'>Mais barato em dinheiro: <b>{brl(best.total_price)}</b> ida e volta — "
-                   f"{dm(best.out.day)} → {dm(best.back.day)} ({best.nights} noites).</div>")
-        rows = []
-        for i, t in enumerate(wr.cash):
-            rows.append(
-                f"<tr class='{'best' if i == 0 else ''}'><td>{dm(t.out.day)}</td><td>{dm(t.back.day)}</td>"
-                f"<td class='num'>{t.nights}</td><td class='num'>{brl(t.out.price)}</td>"
-                f"<td class='num'>{brl(t.back.price)}</td><td class='num'>{brl(t.total_price)}</td>"
-                f"<td>{escape(_airlines(t))}</td>"
-                f"<td>{a(links.google_flights(o, d, t.out.day, t.back.day), 'Google Voos')} · "
-                f"{a(links.azul(o, d, t.out.day, t.back.day), 'Azul')}</td></tr>")
-        out.append("<div class='scroll'><table><thead><tr><th>Ida</th><th>Volta</th><th>Noites</th><th>Ida R$</th>"
-                   "<th>Volta R$</th><th>Total</th><th>Cia</th><th>Conferir</th></tr></thead><tbody>"
-                   + "".join(rows) + "</tbody></table></div>")
+    boxes = [(gr, gr.trips.get(w.name) or []) for gr in rr.groups]
+    if any(trips for _, trips in boxes):
+        out.append("<div class='kpis'>" + "".join(_group_box(gr.group, trips[0]) for gr, trips in boxes if trips)
+                   + "</div>")
+        for i, (gr, trips) in enumerate(boxes):
+            if not trips:
+                continue
+            title = f"Melhores datas para {escape(gr.group.name)} ({escape(gr.group.label)})"
+            out.append(f"<details{' open' if i == 0 else ''}><summary>{title}</summary>"
+                       + _trips_table(cfg, r, gr.group, trips) + "</details>")
     else:
         out.append("<p class='muted small'>Sem combinação em dinheiro com dados suficientes nessa janela.</p>")
 
-    if wr.award:
-        out.append(_award_table(rep, rr, wr.award))
-    elif not rep.has_award_data:
-        est = wr.cash[0] if wr.cash else None
-        if est:
-            p = an.estimate_points(est.total_price - r.extra_cost, cfg.point_value)
-            out.append(f"<p class='small muted'>Em pontos Azul, essa viagem deve ficar por volta de <b>{pts(p)}</b> "
-                       f"(estimativa a R$ {cfg.point_value:.0f} o milheiro — ative o Seats.aero para ver valores reais)."
-                       "</p>")
+    pw = next((p for p in rr.points if p.window.name == w.name), None)
+    if pw and pw.award:
+        out.append(_award_table(rep, rr, pw.award))
+    elif pw and pw.azul and rep.calibration:
+        out.append(_points_estimate(rep, rr, pw.azul[0]))
     return "".join(out)
+
+
+def _points_per_group(rep: Report, per_person: int) -> str:
+    return " · ".join(f"{escape(g.name)}: <b>{pts(per_person * g.size)}</b>" for g in rep.cfg.groups)
+
+
+def _points_estimate(rep: Report, rr: RouteReport, t: Trip) -> str:
+    """Estimativa de pontos a partir do preço da própria Azul em R$."""
+    cfg, cal = rep.cfg, rep.calibration
+    pp = cal.estimate(t.total_price)
+    if cal.calibrated:
+        how = (f"calibrada com {cal.samples_used} anotação(ões) suas do site da Azul: "
+               f"R$ 1 ≈ {cal.points_per_real:.0f} pontos")
+    else:
+        how = (f"régua padrão de R$ {cfg.point_value:.0f} por 1.000 pontos — anote preços do site da Azul em "
+               f"<code>pontos_azul.yaml</code> para calibrar")
+    main = cfg.main_group
+    plan = an.plan_points(cfg, pp * main.size, rep.bonus_pcts)
+    return (f"<div class='good'>🔵 <b>Em pontos Azul (estimativa):</b> cerca de <b>{pts(pp)} pontos por pessoa</b> "
+            f"— {_points_per_group(rep, pp)}.<br><span class='small'>Baseado na passagem mais barata da Azul em R$ "
+            f"({brl(t.total_price)}/pessoa, {dm(t.out.day)} → {dm(t.back.day)}); {how}.</span><br>"
+            f"<span class='small'>Para {escape(main.name)}: {_plan_text(cfg, plan)}</span></div>")
 
 
 def _award_table(rep: Report, rr: RouteReport, trips: list[Trip]) -> str:
     cfg, r = rep.cfg, rr.route
     o, d = cfg.origin, r.destination
+    main = cfg.main_group
     best = trips[0]
-    plan = an.plan_points(cfg, best.total_points, rep.bonus_pcts)
-    cash_same = _cash_for(rr, best)
-    lines = [f"Mais barato em pontos: <b>{pts(best.total_points)} pontos Azul</b> + {brl(best.out.price + best.back.price)}"
-             f" de taxas — {dm(best.out.day)} → {dm(best.back.day)} ({best.nights} noites)."]
+    taxes = best.out.price + best.back.price
+    plan = an.plan_points(cfg, best.total_points * main.size, rep.bonus_pcts)
+    lines = [f"🔵 Mais barato em pontos: <b>{pts(best.total_points)} pontos Azul por pessoa</b> + {brl(taxes)} de "
+             f"taxas — {dm(best.out.day)} → {dm(best.back.day)} ({best.nights} noites).",
+             _points_per_group(rep, best.total_points) + "."]
+    cash_same = _azul_cash_for(rr, best)
     if cash_same:
-        v = an.value_per_thousand(cash_same, best.total_points, best.out.price + best.back.price)
+        v = an.value_per_thousand(cash_same, best.total_points, taxes)
         if v:
             verdict = "✅ vale usar pontos" if v >= cfg.point_value else "💸 melhor pagar em dinheiro"
-            lines.append(f"Nas mesmas datas, em dinheiro sai {brl(cash_same)} → cada 1.000 pontos valem "
-                         f"<b>R$ {v:.2f}</b> ({verdict}; sua régua é R$ {cfg.point_value:.0f}).")
-    lines.append(_plan_text(cfg, plan))
+            lines.append(f"Nas mesmas datas, a Azul em dinheiro sai {brl(cash_same)}/pessoa → cada 1.000 pontos "
+                         f"valem <b>R$ {v:.2f}</b> ({verdict}; sua régua é R$ {cfg.point_value:.0f}).")
+    lines.append(f"Para {escape(main.name)}: " + _plan_text(cfg, plan))
     rows = []
     for i, t in enumerate(trips):
         rows.append(
             f"<tr class='{'best' if i == 0 else ''}'><td>{dm(t.out.day)}</td><td>{dm(t.back.day)}</td>"
-            f"<td class='num'>{t.nights}</td><td class='num'>{pts(t.out.points)}</td><td class='num'>{pts(t.back.points)}</td>"
-            f"<td class='num'>{pts(t.total_points)}</td><td class='num'>{brl(t.out.price + t.back.price)}</td>"
-            f"<td>{a(links.azul(o, d, t.out.day, t.back.day, points=True), 'Azul (pontos)')}</td></tr>")
+            f"<td class='num'>{t.nights}</td><td class='num'>{pts(t.total_points)}</td>"
+            f"<td class='num'>{pts(t.total_points * main.size)}</td><td class='num'>{brl(t.out.price + t.back.price)}</td>"
+            f"<td>{a(links.azul(o, d, t.out.day, t.back.day, True, main.adults, main.children), 'Azul (pontos)')}"
+            f"</td></tr>")
     return ("<div class='good'>" + "<br>".join(lines) + "</div>"
-            "<div class='scroll'><table><thead><tr><th>Ida</th><th>Volta</th><th>Noites</th><th>Ida pts</th>"
-            "<th>Volta pts</th><th>Total pts</th><th>Taxas</th><th>Conferir</th></tr></thead><tbody>"
+            "<div class='scroll'><table><thead><tr><th>Ida</th><th>Volta</th><th>Noites</th><th>Pts/pessoa</th>"
+            f"<th>Pts {escape(main.name)}</th><th>Taxas/pessoa</th><th>Conferir</th></tr></thead><tbody>"
             + "".join(rows) + "</tbody></table></div>")
 
 
-def _cash_for(rr: RouteReport, t: Trip) -> float | None:
-    o, b = rr.out_cash.get(t.out.day), rr.back_cash.get(t.back.day)
+def _azul_cash_for(rr: RouteReport, t: Trip) -> float | None:
+    o, b = rr.azul_out.get(t.out.day), rr.azul_back.get(t.back.day)
     return o.price + b.price if o and b else None
 
 
@@ -260,16 +304,11 @@ def _plan_text(cfg, plan: an.PointsPlan) -> str:
     return txt
 
 
-def _airlines(t: Trip) -> str:
-    names = {"AD": "Azul", "LA": "LATAM", "G3": "GOL", "JJ": "LATAM", "2Z": "Voepass"}
-    cias = {names.get(x, x) for x in (t.out.airline, t.back.airline) if x}
-    return " / ".join(sorted(cias))
-
-
-def _calendars(title: str, by_day: dict[date, Offer], points: bool, open_: bool = False) -> str:
+def _calendars(title: str, by_day: dict[date, Offer], points: bool, open_: bool = False,
+               divisor: int = 1, unit: str = "R$") -> str:
     if not by_day:
         return ""
-    value = (lambda o: o.points) if points else (lambda o: o.price)
+    value = (lambda o: o.points) if points else (lambda o: o.price / divisor)
     level = an.price_levels([value(o) for o in by_day.values()])
     months = sorted({(d.year, d.month) for d in by_day})
     cals = []
@@ -290,7 +329,8 @@ def _calendars(title: str, by_day: dict[date, Offer], points: bool, open_: bool 
         cals.append(f"<div class='cal'><h4>{MONTHS[m]} {y}</h4><div class='grid'>{''.join(cells)}</div></div>")
     legend = ("<div class='legend'>mais barato <span class='lv0'></span><span class='lv1'></span><span class='lv2'>"
               "</span><span class='lv3'></span><span class='lv4'></span> mais caro · cinza = sem dado"
-              + (" · valores em R$ (só ida)" if not points else " · valores em mil pontos (só ida)") + "</div>")
+              + (f" · valores em R$ {unit} (só ida)" if not points else " · mil pontos por pessoa (só ida)")
+              + "</div>")
     return (f"<details{' open' if open_ else ''}><summary>{escape(title)}</summary>{legend}"
             f"<div class='months'>{''.join(cals)}</div></details>")
 
@@ -299,40 +339,56 @@ def _calendars(title: str, by_day: dict[date, Offer], points: bool, open_: bool 
 
 def _anywhere(rep: Report) -> str:
     cfg = rep.cfg
+    g = cfg.main_group
+    multi = g.size > 1
     out = [f"<section class='card' id='oportunidades'><h2>Oportunidades saindo de {escape(city(cfg.origin))}</h2>",
-           f"<div class='muted small'>Ida e volta mais baratas para qualquer destino nos próximos "
-           f"{cfg.anywhere_months} meses.</div>"]
+           f"<div class='muted small'>Ida e volta mais baratas nos próximos {cfg.anywhere_months} meses, "
+           f"{cfg.anywhere_min_stay} a {cfg.anywhere_max_stay} noites"
+           + (f", preços para {escape(g.name)} ({escape(g.label)})" if multi else "")
+           + f". Cada rodada confere {cfg.anywhere_max_dest} destinos em rodízio; a coluna \"Visto\" diz quando "
+           "o preço foi conferido.</div>"]
     if rep.deals:
         rows = []
         for dl in rep.deals:
             nights = f"{dl.nights}" if dl.nights is not None else "—"
             ret = dm(dl.ret) if dl.ret else "só ida"
-            hot = cfg.anywhere_max_price and dl.price <= cfg.anywhere_max_price
+            hot = cfg.anywhere_max_price and dl.per_person <= cfg.anywhere_max_price
+            seen = rep.deals_checked.get(dl.destination)
+            seen_txt = "hoje" if seen == rep.today else (seen.strftime("%d/%m") if seen else "")
             rows.append(
                 f"<tr class='{'best' if hot else ''}'><td>{escape(label(dl.destination))}{' 🔥' if hot else ''}</td>"
-                f"<td>{dm(dl.depart)}</td><td>{ret}</td><td class='num'>{nights}</td><td class='num'>{brl(dl.price)}</td>"
-                f"<td class='muted'>{escape(dl.provider)}</td><td>{_deal_links(cfg, dl)}</td></tr>")
-        out.append("<div class='scroll'><table><thead><tr><th>Destino</th><th>Ida</th><th>Volta</th><th>Noites</th>"
-                   "<th>Total</th><th>Fonte</th><th>Conferir</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
+                f"<td class='num'>{brl(dl.per_person)}</td><td>{dm(dl.depart)} → {ret}</td>"
+                f"<td class='num'>{nights}</td>"
+                + (f"<td class='num'>{brl(dl.price)}</td>" if multi else "")
+                + f"<td class='muted'>{escape(dl.provider)}</td><td class='muted'>{seen_txt}</td>"
+                f"<td>{_deal_links(cfg, dl)}</td></tr>")
+        head = ("<tr><th>Destino</th><th>Por pessoa</th><th>Ida → volta</th><th>Noites</th>"
+                + (f"<th>Total {escape(g.name)}</th>" if multi else "")
+                + "<th>Fonte</th><th>Visto</th><th>Conferir</th></tr>")
+        out.append("<div class='scroll'><table><thead>" + head + "</thead><tbody>" + "".join(rows)
+                   + "</tbody></table></div>")
         if cfg.anywhere_max_price:
-            out.append(f"<p class='small muted'>🔥 = abaixo de {brl(cfg.anywhere_max_price)} (você é avisado).</p>")
+            out.append(f"<p class='small muted'>🔥 = abaixo de {brl(cfg.anywhere_max_price)} por pessoa "
+                       "(você é avisado).</p>")
     else:
-        out.append("<p class='muted'>Sem ofertas em cache no momento.</p>")
+        out.append("<p class='muted'>Sem ofertas no momento.</p>")
     if rep.award_deals:
         rows = []
         for o in rep.award_deals:
             rows.append(f"<tr><td>{escape(label(o.destination))}</td><td>{dm(o.day)}</td>"
                         f"<td class='num'>{pts(o.points)}</td><td class='num'>{brl(o.price)}</td>"
                         f"<td>{a(links.azul(o.origin, o.destination, o.day, points=True), 'Azul (pontos)')}</td></tr>")
-        out.append("<h3>Resgates Azul mais baratos (só ida)</h3><div class='scroll'><table><thead><tr><th>Destino</th>"
-                   "<th>Data</th><th>Pontos</th><th>Taxas</th><th>Conferir</th></tr></thead><tbody>"
+        out.append("<h3>Resgates Azul mais baratos (só ida, por pessoa)</h3><div class='scroll'><table><thead><tr>"
+                   "<th>Destino</th><th>Data</th><th>Pontos</th><th>Taxas</th><th>Conferir</th></tr></thead><tbody>"
                    + "".join(rows) + "</tbody></table></div>")
     out.append("</section>")
     return "".join(out)
 
 
 def _deal_links(cfg, dl) -> str:
-    google = a(links.google_flights(cfg.origin, dl.destination, dl.depart, dl.ret), "Google Voos")
+    g = cfg.main_group
+    google = a(links.google_flights(cfg.origin, dl.destination, dl.depart, dl.ret, g.adults, g.children),
+               "Google Voos")
     if dl.link and "google.com" not in dl.link:
         return a(dl.link, "Oferta") + " · " + google
     return google

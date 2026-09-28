@@ -61,6 +61,11 @@ class Deal:
     transfers: int | None = None
     link: str = ""
     provider: str = ""
+    pax: int = 1  # ``price`` é o total para este número de pessoas
+
+    @property
+    def per_person(self) -> float:
+        return self.price / max(1, self.pax)
 
     @property
     def nights(self) -> int | None:

@@ -146,6 +146,41 @@ def estimate_points(cash_price: float, point_value: float) -> int:
     return int(round(cash_price / point_value * 1000, -2))
 
 
+@dataclass(frozen=True)
+class PointsCalibration:
+    """Quantos pontos Azul custa cada R$ 1 de passagem da Azul."""
+
+    points_per_real: float
+    samples_used: int
+
+    def estimate(self, azul_cash_price: float) -> int:
+        return int(round(azul_cash_price * self.points_per_real, -2))
+
+    @property
+    def calibrated(self) -> bool:
+        return self.samples_used > 0
+
+
+def calibrate_points(samples, azul_price_on, point_value: float) -> PointsCalibration:
+    """Aprende a proporção pontos/R$ a partir das anotações do site da Azul.
+
+    ``azul_price_on(origem, destino, dia)`` devolve o preço da Azul em R$ (1 pessoa)
+    naquele dia, ou None. Sem anotações usáveis, cai na régua ``point_value``
+    (R$ por 1.000 pontos).
+    """
+    ratios = []
+    for s in samples:
+        cash = s.cash or azul_price_on(s.origin, s.destination, s.day)
+        if cash and cash > 0 and s.points > 0:
+            ratios.append(s.points / cash)
+    if not ratios:
+        return PointsCalibration(1000 / point_value, 0)
+    ratios.sort()
+    mid = len(ratios) // 2
+    median = ratios[mid] if len(ratios) % 2 else (ratios[mid - 1] + ratios[mid]) / 2
+    return PointsCalibration(median, len(ratios))
+
+
 # ---------------------------------------------------------------- qualquer destino
 
 def best_deals(deals: Iterable[Deal], exclude: Iterable[str] = (), top: int = 20) -> list[Deal]:

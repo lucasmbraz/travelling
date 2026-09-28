@@ -49,10 +49,9 @@ def cmd_painel(args) -> int:
     if args.demo and not any(cfg.balances.values()):
         cfg.balances = {"azul": 12000, "livelo": 30000, "cartao": 15000}  # saldos fictícios
     cash, award, promos = _providers(cfg, args.demo, today)
-    rep = build_report(cfg, cash, award, promos, today, demo=args.demo)
-
     state_path = Path(args.estado)
-    state = load_state(state_path)
+    state = {} if args.demo else load_state(state_path)
+    rep = build_report(cfg, cash, award, promos, today, demo=args.demo, state=state)
     alerts = compute_alerts(rep, state)
     if not args.demo:
         save_state(state_path, state)
@@ -64,8 +63,13 @@ def cmd_painel(args) -> int:
     (out / "index.html").write_text(render(rep), encoding="utf-8")
     print(f"Painel gerado em {out / 'index.html'} — {len(alerts)} alerta(s), {len(rep.errors)} aviso(s).")
     for rr in rep.routes:
-        print(f"  {cfg.origin}⇄{rr.route.destination}: preços em R$ para {len(rr.out_cash)} dias de ida e "
-              f"{len(rr.back_cash)} de volta; pontos para {len(rr.out_award)}/{len(rr.back_award)} dias")
+        grupos = "; ".join(f"{gr.group.name}: {len(gr.out_cash)}/{len(gr.back_cash)}" for gr in rr.groups)
+        print(f"  {cfg.origin}⇄{rr.route.destination}: dias com preço (ida/volta) — {grupos}; "
+              f"só Azul: {len(rr.azul_out)}/{len(rr.azul_back)}; pontos: {len(rr.out_award)}/{len(rr.back_award)}")
+    cal = rep.calibration
+    if cal:
+        print(f"  pontos Azul: 1 real ≈ {cal.points_per_real:.0f} pontos "
+              f"({'calibrado com ' + str(cal.samples_used) + ' anotação(ões)' if cal.calibrated else 'régua padrão'})")
     print(f"  qualquer destino: {len(rep.deals)} destinos; promoções relevantes: {len(rep.promos)}")
     print("  preços recebidos por fonte: "
           + (", ".join(f"{k}: {v}" for k, v in rep.source_counts.items()) or "nenhum"))
@@ -91,12 +95,14 @@ def cmd_datas(args) -> int:
     cash, award, _ = _providers(cfg, args.demo, today)
     o, d = cfg.origin, args.destino.upper()
     start, end = date.fromisoformat(args.de), date.fromisoformat(args.ate)
-    outs = an.cheapest_by_day(x for p in cash for x in p.one_way_range(o, d, start, end))
-    backs = an.cheapest_by_day(x for p in cash for x in p.one_way_range(d, o, start, end))
+    pax = dict(adults=args.adultos, children=args.criancas)
+    outs = an.cheapest_by_day(x for p in cash for x in p.one_way_range(o, d, start, end, **pax))
+    backs = an.cheapest_by_day(x for p in cash for x in p.one_way_range(d, o, start, end, **pax))
     w = Window("busca", start, end, args.min, args.max)
     trips = an.best_round_trips(outs, backs, w.start, w.end, w.min_stay, w.max_stay, top=args.top)
     print(f"{label(o)} ⇄ {label(d)} · ida a partir de {start:%d/%m/%Y}, volta até {end:%d/%m/%Y}, "
-          f"{args.min}–{args.max} noites\n")
+          f"{args.min}–{args.max} noites · {args.adultos} adulto(s) + {args.criancas} criança(s), "
+          f"total do grupo\n")
     if not trips:
         print("Nenhuma combinação encontrada com os dados disponíveis.")
     for t in trips:
@@ -165,6 +171,8 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--min", type=int, default=5, help="mínimo de noites")
     s.add_argument("--max", type=int, default=15, help="máximo de noites")
     s.add_argument("--top", type=int, default=10)
+    s.add_argument("--adultos", type=int, default=2)
+    s.add_argument("--criancas", type=int, default=3)
     s.set_defaults(fn=cmd_datas)
 
     s = sub.add_parser("pontos", help="de onde tirar os pontos para um resgate")

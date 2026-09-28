@@ -64,3 +64,23 @@ def test_diagnose_reports_counts_and_errors(monkeypatch):
     assert any(line.strip().startswith("2  v3 grouped_prices") for line in lines)
     assert any("ERRO  v1 prices/calendar" in line for line in lines)
     assert sum(line.startswith("==") for line in lines) == 2  # ida e volta
+
+
+def test_travelpayouts_group_prices_are_multiplied_and_cached(monkeypatch):
+    calls = []
+
+    def fake(url, params=None, headers=None):
+        calls.append(url)
+        if url.endswith("prices_for_dates"):
+            return {"success": True, "data": [
+                {"price": 600, "airline": "AD", "departure_at": "2026-12-18T06:10:00-03:00"},
+                {"price": 500, "airline": "G3", "departure_at": "2026-12-19T06:10:00-03:00"}]}
+        return {"success": True, "data": {}}
+
+    monkeypatch.setattr(travelpayouts, "get_json", fake)
+    p = travelpayouts.TravelpayoutsProvider("t")
+    fam = p.one_way_range("BEL", "MCZ", date(2026, 12, 1), date(2026, 12, 31), adults=2, children=3)
+    assert sorted(o.price for o in fam) == [2500, 3000] and fam[0].provider == "Travelpayouts (×5 estimado)"
+    n_calls = len(calls)
+    azul = p.one_way_range("BEL", "MCZ", date(2026, 12, 1), date(2026, 12, 31), airline="AD")
+    assert [o.price for o in azul] == [600] and len(calls) == n_calls  # usou o cache

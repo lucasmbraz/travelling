@@ -41,3 +41,13 @@ def test_google_unknown_airport():
     with pytest.raises(ValueError, match="XYZ1"):
         google.GoogleFlightsProvider(search=FakeSearch([])).one_way_range(
             "BEL", "XYZ1", date.today(), date.today() + timedelta(days=5))
+
+
+def test_google_passes_passengers_and_airline():
+    d1 = date.today() + timedelta(days=10)
+    fake = FakeSearch([FakeResult(d1, 3000.0)])
+    [o] = google.GoogleFlightsProvider(search=fake).one_way_range(
+        "BEL", "MCZ", date.today(), date.today() + timedelta(days=30), adults=2, children=3, airline="AD")
+    filters = fake.calls[0][0]
+    assert (filters.passenger_info.adults, filters.passenger_info.children) == (2, 3)
+    assert [a.name for a in filters.airlines] == ["AD"] and o.airline == "AD" and o.price == 3000.0

@@ -24,16 +24,33 @@ programas:
     bonus: 0
     palavras: [inter, loop]
 
+# Os pontos Azul são estimados a partir do preço da própria Azul em R$. Para a
+# estimativa ficar boa, anote de vez em quando no arquivo pontos_azul.yaml alguns
+# preços em pontos que você viu no site da Azul: o radar aprende a proporção.
+#
 # Quanto vale 1.000 pontos Azul em R$ (usado só para ESTIMAR pontos quando não
 # há dados reais de resgate). Também é a régua do "vale a pena usar pontos?".
 valor_milheiro_azul: 16.0
+
+# Quem viaja. O primeiro grupo é o principal: é o usado em "Oportunidades" e nos
+# alertas. Os preços são buscados já para o grupo inteiro (e mostrados também por
+# pessoa). Crianças de 2 a 11 anos pagam assento.
+viajantes:
+  familia:
+    nome: Família
+    adultos: 2
+    criancas: 3        # 3, 5 e 9 anos
+  casal:
+    nome: Casal
+    adultos: 2
+    criancas: 0
 
 # Destinos que você acompanha sempre (ida e volta a partir da origem).
 rotas:
   - destino: MCZ
     nome: Maceió
-    alvo_reais: 900          # me avise se ida+volta ficar abaixo disso
-    alvo_pontos: 25000       # ...ou abaixo disso em pontos Azul
+    alvo_reais: 900          # me avise se ida+volta POR PESSOA ficar abaixo disso
+    alvo_pontos: 25000       # ...ou abaixo disso em pontos Azul por pessoa
   - destino: REC
     nome: Recife
     alvo_reais: 700
@@ -54,14 +71,23 @@ janelas:
 
 # "Para onde dá pra ir barato?" — ofertas saindo da origem para qualquer lugar.
 # O radar junta duas fontes: os destinos que aparecem no cache da Travelpayouts e
-# a lista de "candidatos" abaixo, que é conferida dia a dia no Google Voos.
+# a lista de "candidatos" abaixo, conferida dia a dia no Google Voos em rodízio
+# (max_destinos por rodada; com 3 rodadas por dia a lista inteira é vista em ~1 dia).
 qualquer_destino:
   meses_a_frente: 3
-  preco_max_alerta: 1200     # avisa quando ida+volta ficar abaixo disso
+  preco_max_alerta: 1200     # avisa quando ida+volta POR PESSOA ficar abaixo disso
   estadia_min: 3             # noites
   estadia_max: 10
-  max_destinos: 15           # quantos destinos conferir no Google Voos por rodada
-  candidatos: [FOR, SLZ, REC, SSA, NAT, MAO, BSB, GRU, GIG, CNF, FLN, LIM, BOG, CAY, MIA, LIS]
+  max_destinos: 15
+  candidatos: [
+    # Norte e Nordeste
+    FOR, SLZ, SSA, NAT, JPA, AJU, THE, MAO, MCP, STM, MAB, PMW, IOS, BPS, FEN, JJD,
+    # Centro-Oeste, Sudeste e Sul
+    BSB, GYN, CGB, GRU, CGH, VCP, GIG, SDU, CNF, VIX, CWB, FLN, NVT, POA, IGU,
+    # América do Sul, Caribe e Guianas
+    LIM, CUZ, BOG, MDE, CTG, PTY, EZE, SCL, MVD, CAY, PBM, CUN, PUJ,
+    # EUA e Europa
+    MIA, FLL, MCO, JFK, LIS, OPO, MAD]
   excluir: []                # códigos IATA que você não quer ver
 
 # Promoções: feeds RSS de blogs de milhas e passagens.

@@ -61,11 +61,16 @@ Os avisos chegam com prioridade diferente:
 Se houver muitos avisos de uma vez, chegam os 5 mais importantes e um resumo com o resto.
 Tocar na notificação abre o link da passagem ou da promoção.
 
-### 3. Pontos Azul reais (opcional, pago)
-Sem isso, o radar **estima** os pontos a partir do preço em reais (configurável em
-`valor_milheiro_azul`). Para ver a disponibilidade real de resgate da Azul Fidelidade,
-assine o [Seats.aero Pro](https://seats.aero/) (~US$ 10/mês, dá pra assinar só nos meses
-em que estiver planejando) e pegue a chave da API nas configurações.
+### 3. Pontos Azul
+**Grátis (estimativa calibrada):** o radar busca o preço **só da Azul** em R$ e converte
+em pontos. Para a conta ficar boa, anote de vez em quando no arquivo
+[`pontos_azul.yaml`](pontos_azul.yaml) alguns preços em pontos que você viu no site da Azul
+(data, trecho e pontos; o preço em R$ do mesmo voo é opcional). O radar aprende quantos
+pontos vale cada real nas suas rotas. Sem anotações, usa a régua `valor_milheiro_azul`.
+
+**Pago (valor exato):** assine o [Seats.aero Pro](https://seats.aero/) (~US$ 10/mês, dá
+para assinar só nos meses em que estiver planejando) e cadastre a chave no segredo
+`SEATS_AERO_KEY`.
 
 ### 4. Colocar no GitHub
 No repositório: **Settings → Secrets and variables → Actions → New repository secret**:
@@ -97,10 +102,16 @@ Actions → Variables**.
 > painel.
 
 ### 5. Ajustar ao seu gosto
-Tudo fica em [`config.yaml`](config.yaml): destinos, janelas de viagem (ex.: "Fim de ano,
-de 12/12 a 15/01, de 7 a 21 noites"), preço-alvo de cada rota (e, se quiser, um
-custo extra somado ao total, com `custo_extra_reais`), preço máximo para avisar de oportunidades, proporção e bônus de cada
-programa de pontos.
+Tudo fica em [`config.yaml`](config.yaml):
+- **quem viaja** (`viajantes`): hoje Família (2 adultos + 3 crianças) e Casal. Os preços
+  são buscados já para o grupo inteiro e o painel mostra total e por pessoa. O primeiro
+  grupo é o usado em "Oportunidades" e nos alertas;
+- destinos, janelas de viagem (ex.: "Fim de ano, de 12/12 a 15/01, de 7 a 21 noites");
+- preço-alvo **por pessoa** de cada rota (e, se quiser, um custo extra somado ao total,
+  com `custo_extra_reais`);
+- a lista de destinos candidatos para "Oportunidades" (conferidos em rodízio, 15 por
+  rodada) e o preço máximo por pessoa para avisar;
+- proporção e bônus de cada programa de pontos.
 
 ## Usar no computador (opcional)
 
@@ -114,8 +125,8 @@ python -m radar --demo painel --sem-alertas      # abre site/index.html
 export TRAVELPAYOUTS_TOKEN=...   # e SEATS_AERO_KEY=... se tiver
 python -m radar painel --sem-alertas
 
-# "quero ir pra Maceió entre 10/12 e 15/01, ficando de 7 a 20 noites"
-python -m radar datas MCZ --de 2026-12-10 --ate 2027-01-15 --min 7 --max 20
+# "quero ir pra Maceió entre 10/12 e 15/01, ficando de 7 a 20 noites" (família: 2 + 3)
+python -m radar datas MCZ --de 2026-12-10 --ate 2027-01-15 --min 7 --max 20 --adultos 2 --criancas 3
 
 # "preciso de 32 mil pontos, de onde tiro? (Livelo com 100% de bônus)"
 python -m radar pontos 32000 --bonus livelo=100
@@ -132,7 +143,10 @@ Testes: `pip install -e '.[dev]' && pytest`.
   Se uma fonte falhar, o radar segue com a outra e mostra o problema em "Avisos" no painel.
   Para investigar, rode a Action **Diagnóstico de preços**: ela mostra quantos preços cada
   fonte trouxe para cada trecho.
-- **Pontos Azul** só são reais com o Seats.aero; sem ele é estimativa.
+- **Pontos Azul** só são exatos com o Seats.aero; sem ele é estimativa (melhor quanto mais
+  anotações houver em `pontos_azul.yaml`).
+- **Preços da Travelpayouts** são sempre de 1 adulto; para grupos o radar multiplica e
+  marca a fonte como "estimado". Os do Google Voos já vêm para o grupo inteiro.
 - **Promoções** são detectadas pelo título dos posts. O percentual mostrado é o "até X%"
   anunciado — o bônus que você recebe depende do Clube Azul e das regras de cada campanha.
 - Transferência de pontos é **irreversível**: sempre confira a passagem antes de transferir.

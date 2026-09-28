@@ -19,6 +19,38 @@ class Program:
 
 
 @dataclass
+class Group:
+    """Quem viaja: os preços são buscados já para o grupo inteiro."""
+
+    key: str
+    name: str
+    adults: int = 1
+    children: int = 0
+
+    @property
+    def size(self) -> int:
+        return self.adults + self.children
+
+    @property
+    def label(self) -> str:
+        parts = [f"{self.adults} adulto{'s' if self.adults != 1 else ''}"]
+        if self.children:
+            parts.append(f"{self.children} criança{'s' if self.children != 1 else ''}")
+        return " + ".join(parts)
+
+
+@dataclass
+class PointsSample:
+    """Um preço em pontos visto no site da Azul (por pessoa, só ida)."""
+
+    origin: str
+    destination: str
+    day: date
+    points: int
+    cash: float | None = None  # preço em R$ da mesma passagem, se anotado
+
+
+@dataclass
 class Route:
     destination: str
     name: str
@@ -55,6 +87,12 @@ class Config:
     feeds: list[str] = field(default_factory=list)
     promo_recent_days: int = 10
     drop_pct: float = 10.0
+    groups: list[Group] = field(default_factory=lambda: [Group("voce", "Você")])
+    points_samples: list[PointsSample] = field(default_factory=list)
+
+    @property
+    def main_group(self) -> Group:
+        return self.groups[0]
 
     def months_ahead(self, today: date, n: int) -> list[tuple[int, int]]:
         out, y, m = [], today.year, today.month
@@ -133,6 +171,21 @@ def load_config(path: str | Path, today: date | None = None) -> Config:
         k, _, v = item.partition("=")
         balances[k.strip()] = int(v.strip() or 0)
 
+    groups = [
+        Group(key=k, name=g.get("nome", k), adults=int(g.get("adultos", 1)), children=int(g.get("criancas", 0)))
+        for k, g in (raw.get("viajantes") or {}).items()
+    ] or [Group("voce", "Você")]
+
+    samples_path = Path(path).with_name(raw.get("arquivo_pontos", "pontos_azul.yaml"))
+    samples = []
+    if samples_path.exists():
+        for item in yaml.safe_load(samples_path.read_text(encoding="utf-8")) or []:
+            samples.append(PointsSample(
+                origin=str(item["de"]).upper(), destination=str(item["para"]).upper(),
+                day=_to_date(item["data"]), points=int(item["pontos"]),
+                cash=float(item["reais"]) if item.get("reais") else None,
+            ))
+
     anywhere = raw.get("qualquer_destino") or {}
     promos = raw.get("promocoes") or {}
     alerts = raw.get("alertas") or {}
@@ -153,4 +206,6 @@ def load_config(path: str | Path, today: date | None = None) -> Config:
         feeds=list(promos.get("feeds", [])),
         promo_recent_days=int(promos.get("dias_recentes", 10)),
         drop_pct=float(alerts.get("queda_minima_pct", 10)),
+        groups=groups,
+        points_samples=samples,
     )

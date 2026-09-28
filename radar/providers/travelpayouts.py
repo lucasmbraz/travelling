@@ -8,6 +8,7 @@ Token grátis: https://www.travelpayouts.com/ → Perfil → API token.
 """
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import date, datetime
 
 from radar.models import Deal, Offer
@@ -39,6 +40,7 @@ class TravelpayoutsProvider:
         self.token = token
         self.market = market
         self.currency = currency
+        self._cache: dict = {}  # a mesma rota é pedida para cada grupo de viajantes
 
     def _get(self, path: str, **params):
         params = {k: v for k, v in params.items() if v is not None}
@@ -71,13 +73,23 @@ class TravelpayoutsProvider:
             offers.append(self._offer(row, origin, destination))
         return [o for o in offers if o.day and o.price > 0]
 
-    def one_way_range(self, origin: str, destination: str, start: date, end: date) -> list[Offer]:
+    def one_way_range(self, origin: str, destination: str, start: date, end: date,
+                      adults: int = 1, children: int = 0, airline: str | None = None) -> list[Offer]:
+        """Preços do cache (sempre de 1 adulto). Para grupos, multiplica pelo número de
+        pessoas e marca a fonte como estimada."""
         offers: list[Offer] = []
         y, m = start.year, start.month
         while (y, m) <= (end.year, end.month):
-            offers += self.one_way_month(origin, destination, y, m)
+            key = (origin, destination, y, m)
+            if key not in self._cache:
+                self._cache[key] = self.one_way_month(origin, destination, y, m)
+            offers += self._cache[key]
             y, m = (y + 1, 1) if m == 12 else (y, m + 1)
-        return [o for o in offers if start <= o.day <= end]
+        offers = [o for o in offers if start <= o.day <= end and (not airline or o.airline == airline)]
+        n = adults + children
+        if n == 1:
+            return offers
+        return [replace(o, price=o.price * n, provider=f"{self.name} (×{n} estimado)") for o in offers]
 
     def _offer(self, row: dict, origin: str, destination: str) -> Offer:
         return Offer(
