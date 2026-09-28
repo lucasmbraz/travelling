@@ -4,8 +4,49 @@
   "BEL-FOR|qualquer|familia|pp": 925.0
  },
  "anywhere": {
-  "deals": {},
-  "offset": 15
+  "deals": {
+   "BSB": {
+    "checked": "2026-09-28",
+    "depart": "2026-12-04",
+    "dest": "BSB",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20BSB%20on%202026-12-04%20through%202026-12-12%20for%202%20adults%20and%203%20children",
+    "pax": 5,
+    "price": 7205.0,
+    "provider": "Google Voos",
+    "ret": "2026-12-12"
+   },
+   "GIG": {
+    "checked": "2026-09-28",
+    "depart": "2026-12-07",
+    "dest": "GIG",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20GIG%20on%202026-12-07%20through%202026-12-13%20for%202%20adults%20and%203%20children",
+    "pax": 5,
+    "price": 6027.0,
+    "provider": "Google Voos",
+    "ret": "2026-12-13"
+   },
+   "SDU": {
+    "checked": "2026-09-28",
+    "depart": "2026-10-09",
+    "dest": "SDU",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SDU%20on%202026-10-09%20through%202026-10-12%20for%202%20adults%20and%203%20children",
+    "pax": 5,
+    "price": 12047.0,
+    "provider": "Google Voos",
+    "ret": "2026-10-12"
+   },
+   "VCP": {
+    "checked": "2026-09-28",
+    "depart": "2026-10-22",
+    "dest": "VCP",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20VCP%20on%202026-10-22%20through%202026-10-25%20for%202%20adults%20and%203%20children",
+    "pax": 5,
+    "price": 8321.0,
+    "provider": "Google Voos",
+    "ret": "2026-10-25"
+   }
+  },
+  "offset": 30
  },
  "history": {
   "BEL-BSB|qualquer|familia|pp": [
@@ -18,6 +59,12 @@
    {
     "t": "2026-09-28",
     "v": 925.0
+   }
+  ],
+  "BEL-GIG|qualquer|familia|pp": [
+   {
+    "t": "2026-09-28",
+    "v": 1205.4
    }
   ],
   "BEL-GRU|qualquer|familia|pp": [
@@ -54,6 +101,12 @@
    {
     "t": "2026-09-28",
     "v": 1233.0
+   }
+  ],
+  "BEL-SDU|qualquer|familia|pp": [
+   {
+    "t": "2026-09-28",
+    "v": 2409.4
    }
   ],
   "BEL-SSA|qualquer|familia|pp": [
