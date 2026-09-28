@@ -103,14 +103,13 @@ Actions → Variables**.
 
 ### 5. Ajustar ao seu gosto
 Tudo fica em [`config.yaml`](config.yaml):
-- **quem viaja** (`viajantes`): hoje Família (2 adultos + 3 crianças) e Casal. Os preços
-  são buscados já para o grupo inteiro e o painel mostra total e por pessoa. O primeiro
-  grupo é o usado em "Oportunidades" e nos alertas;
+- **quem viaja** (`viajantes`): hoje 1 adulto (preço por pessoa). O calendário de preços do
+  Google só funciona para até 2 pessoas; com 3 ou mais quase não vêm preços;
 - destinos, janelas de viagem (ex.: "Fim de ano, de 12/12 a 15/01, de 7 a 21 noites");
-- preço-alvo **por pessoa** de cada rota (e, se quiser, um custo extra somado ao total,
+- preço-alvo de cada rota (1 adulto) (e, se quiser, um custo extra somado ao total,
   com `custo_extra_reais`);
 - a lista de destinos candidatos para "Oportunidades" (conferidos em rodízio, 15 por
-  rodada) e o preço máximo por pessoa para avisar;
+  rodada) e o preço máximo para avisar;
 - proporção e bônus de cada programa de pontos.
 
 ## Usar no computador (opcional)
@@ -125,8 +124,8 @@ python -m radar --demo painel --sem-alertas      # abre site/index.html
 export TRAVELPAYOUTS_TOKEN=...   # e SEATS_AERO_KEY=... se tiver
 python -m radar painel --sem-alertas
 
-# "quero ir pra Maceió entre 10/12 e 15/01, ficando de 7 a 20 noites" (família: 2 + 3)
-python -m radar datas MCZ --de 2026-12-10 --ate 2027-01-15 --min 7 --max 20 --adultos 2 --criancas 3
+# "quero ir pra Maceió entre 10/12 e 15/01, ficando de 7 a 20 noites"
+python -m radar datas MCZ --de 2026-12-10 --ate 2027-01-15 --min 7 --max 20
 
 # "preciso de 32 mil pontos, de onde tiro? (Livelo com 100% de bônus)"
 python -m radar pontos 32000 --bonus livelo=100

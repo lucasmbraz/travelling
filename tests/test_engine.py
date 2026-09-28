@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 
-from radar.config import PointsSample, load_config
+from radar.config import Group, PointsSample, load_config
 from radar.engine import (PRIORITY_LOW, PRIORITY_URGENT, build_report, compute_alerts)
 from radar.models import Deal, Offer
 from radar.providers.demo import DemoAwardProvider, DemoCashProvider, DemoPromoProvider
@@ -36,7 +36,7 @@ def test_report_has_groups_windows_and_no_past_dates():
     rep = report()
     assert [r.route.destination for r in rep.routes] == ["MCZ", "REC"]
     for rr in rep.routes:
-        assert [g.group.key for g in rr.groups] == ["familia", "casal"]
+        assert [g.group.key for g in rr.groups] == ["adulto"]
         for gr in rr.groups:
             assert all(d > TODAY for d in gr.out_cash)
             for w in rep.cfg.windows:
@@ -55,10 +55,21 @@ def test_flexible_window_is_5_to_21_nights():
     assert (w.min_stay, w.max_stay) == (5, 21)
 
 
-def test_family_and_couple_are_searched_with_their_passengers():
+def family_cfg():
+    c = cfg()
+    c.groups = [Group("familia", "Família", 2, 3), Group("casal", "Casal", 2, 0)]
+    return c
+
+
+def test_default_is_one_adult():
+    c = cfg()
+    assert [(g.adults, g.children) for g in c.groups] == [(1, 0)]
+
+
+def test_groups_are_searched_with_their_passengers():
     day = TODAY + timedelta(days=80)
     src = Source("A", 500, day)
-    rep = build_report(cfg(), [src], None, None, TODAY)
+    rep = build_report(family_cfg(), [src], None, None, TODAY)
     pax = {(a, c, al) for (_, _, a, c, al) in src.calls}
     assert {(2, 3, None), (2, 0, None), (1, 0, "AD")} <= pax
     mcz = rep.routes[0]
@@ -71,8 +82,8 @@ def test_sources_are_combined_cheapest_wins_and_failures_are_isolated():
     day = TODAY + timedelta(days=80)
     sources = [Source("A", 700, day), Source("B", 500, day), Source("C", 0, day, fail=True)]
     rep = build_report(cfg(), sources, None, None, TODAY)
-    fam = rep.routes[0].main
-    assert fam.out_cash[day].price == 2500 and fam.out_cash[day].provider == "B"
+    main = rep.routes[0].main
+    assert main.out_cash[day].price == 500 and main.out_cash[day].provider == "B"
     assert any(e.startswith("C BEL→MCZ: fora do ar") for e in rep.errors)
     assert rep.source_counts["A"] > 0 and rep.source_counts["B"] > 0
 
@@ -92,7 +103,7 @@ def test_points_calibration_uses_samples():
     assert 49 < rep.calibration.points_per_real <= 50
     html = render(rep)
     assert "Em pontos Azul (estimativa)" in html and "calibrada com 2 anotação" in html
-    assert "Família: <b>" in html and "Casal: <b>" in html
+    assert "Plano:" in html or "saldos" in html
 
 
 def test_anywhere_rotates_and_keeps_recent_results():
@@ -107,7 +118,7 @@ def test_anywhere_rotates_and_keeps_recent_results():
     assert second_batch  # a segunda rodada conferiu outros destinos
     shown = {d.destination for d in rep2.deals}
     assert len(shown) >= len({d.destination for d in rep1.deals})
-    assert all(d.pax == 5 for d in rep2.deals)  # preços para a família
+    assert all(d.pax == 1 for d in rep2.deals)
 
 
 def test_anywhere_cache_expires():
@@ -122,7 +133,7 @@ def test_alerts_are_per_person_and_not_repeated():
     state = {}
     first = compute_alerts(report(), state)
     assert any(a.key.startswith("promo|") for a in first)
-    alvo = [a for a in first if a.key.startswith("alvo|") and a.key.endswith("|familia|pp")]
+    alvo = [a for a in first if a.key.startswith("alvo|") and a.key.endswith("|adulto|pp")]
     assert alvo and "/pessoa" in alvo[0].text
     second = compute_alerts(report(), state)
     assert not [a for a in second if a.key.startswith(("promo|", "alvo|", "oport|"))]
@@ -138,8 +149,8 @@ def test_old_history_keys_are_dropped():
 def test_price_drop_alert():
     rep = report()
     w = rep.cfg.windows[0]
-    key = f"BEL-MCZ|{w.name}|familia|pp"
-    best_pp = rep.routes[0].main.trips[w.name][0].total_price / 5
+    key = f"BEL-MCZ|{w.name}|adulto|pp"
+    best_pp = rep.routes[0].main.trips[w.name][0].total_price
     state = {"history": {key: [{"t": "2026-09-20", "v": best_pp * 2}]}, "alerted": {}}
     state["alerted"][key] = best_pp  # alvo já avisado com esse preço: sobra o alerta de queda
     alerts = compute_alerts(rep, state)
@@ -166,7 +177,7 @@ def test_empty_route_is_reported():
 def test_render_html():
     html = render(report())
     assert "Radar de Passagens" in html and "Maceió" in html and "FICTÍCIOS" in html
-    assert "casa dos pais" not in html and "Por pessoa" in html and "Casal" in html
+    assert "casa dos pais" not in html and "Ida e volta, 1 adulto" in html
 
 
 def test_deal_per_person():
@@ -177,3 +188,17 @@ def test_deal_per_person():
 def test_route_destinations_are_not_repeated_in_opportunities():
     dests = {d.destination for d in report().deals}
     assert "MCZ" not in dests and "REC" not in dests
+
+
+def test_family_groups_still_render_per_person():
+    html = render(build_report(family_cfg(), [DemoCashProvider()], None, None, TODAY, demo=True))
+    assert "Por pessoa" in html and "Casal" in html and "Família: <b>" in html
+
+
+def test_points_estimate_falls_back_when_no_azul_only_price():
+    class NoAzul(DemoCashProvider):
+        def one_way_range(self, *a, airline=None, **k):
+            return [] if airline else super().one_way_range(*a, **k)
+
+    html = render(build_report(cfg(), [NoAzul()], None, None, TODAY, demo=True))
+    assert "Em pontos Azul (estimativa)" in html and "não achei preço só da Azul" in html

@@ -171,8 +171,8 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--min", type=int, default=5, help="mínimo de noites")
     s.add_argument("--max", type=int, default=15, help="máximo de noites")
     s.add_argument("--top", type=int, default=10)
-    s.add_argument("--adultos", type=int, default=2)
-    s.add_argument("--criancas", type=int, default=3)
+    s.add_argument("--adultos", type=int, default=1)
+    s.add_argument("--criancas", type=int, default=0)
     s.set_defaults(fn=cmd_datas)
 
     s = sub.add_parser("pontos", help="de onde tirar os pontos para um resgate")

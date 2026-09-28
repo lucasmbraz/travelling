@@ -32,25 +32,20 @@ programas:
 # há dados reais de resgate). Também é a régua do "vale a pena usar pontos?".
 valor_milheiro_azul: 16.0
 
-# Quem viaja. O primeiro grupo é o principal: é o usado em "Oportunidades" e nos
-# alertas. Os preços são buscados já para o grupo inteiro (e mostrados também por
-# pessoa). Crianças de 2 a 11 anos pagam assento.
+# Quem viaja. Os preços são buscados para 1 adulto (o calendário de preços do
+# Google só funciona para até 2 pessoas). Dá para cadastrar outros grupos aqui, mas
+# grupos de 3 ou mais pessoas quase não trazem preços.
 viajantes:
-  familia:
-    nome: Família
-    adultos: 2
-    criancas: 3        # 3, 5 e 9 anos
-  casal:
-    nome: Casal
-    adultos: 2
-    criancas: 0
+  adulto:
+    nome: Por pessoa
+    adultos: 1
 
 # Destinos que você acompanha sempre (ida e volta a partir da origem).
 rotas:
   - destino: MCZ
     nome: Maceió
-    alvo_reais: 900          # me avise se ida+volta POR PESSOA ficar abaixo disso
-    alvo_pontos: 25000       # ...ou abaixo disso em pontos Azul por pessoa
+    alvo_reais: 900          # me avise se ida+volta (1 adulto) ficar abaixo disso
+    alvo_pontos: 25000       # ...ou abaixo disso em pontos Azul
   - destino: REC
     nome: Recife
     alvo_reais: 700
@@ -75,7 +70,7 @@ janelas:
 # (max_destinos por rodada; com 3 rodadas por dia a lista inteira é vista em ~1 dia).
 qualquer_destino:
   meses_a_frente: 3
-  preco_max_alerta: 1200     # avisa quando ida+volta POR PESSOA ficar abaixo disso
+  preco_max_alerta: 1200     # avisa quando ida+volta (1 adulto) ficar abaixo disso
   estadia_min: 3             # noites
   estadia_max: 10
   max_destinos: 15

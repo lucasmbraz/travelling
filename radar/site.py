@@ -182,7 +182,8 @@ def _route(rep: Report, rr: RouteReport) -> str:
 def _group_box(g, t: Trip) -> str:
     n = g.size
     per = f"<span>{brl(t.total_price / n)} por pessoa</span>" if n > 1 else ""
-    return (f"<div class='kpi'><span>{escape(g.name)} · {escape(g.label)}</span><b>{brl(t.total_price)}</b>{per}"
+    title = f"{escape(g.name)} · {escape(g.label)}" if n > 1 else "Ida e volta, 1 adulto"
+    return (f"<div class='kpi'><span>{title}</span><b>{brl(t.total_price)}</b>{per}"
             f"<span>{dm(t.out.day)} → {dm(t.back.day)} · {t.nights} noites</span></div>")
 
 
@@ -214,7 +215,8 @@ def _window(rep: Report, rr: RouteReport, w) -> str:
         for i, (gr, trips) in enumerate(boxes):
             if not trips:
                 continue
-            title = f"Melhores datas para {escape(gr.group.name)} ({escape(gr.group.label)})"
+            title = (f"Melhores datas para {escape(gr.group.name)} ({escape(gr.group.label)})"
+                     if len(rr.groups) > 1 or gr.group.size > 1 else "Melhores datas")
             out.append(f"<details{' open' if i == 0 else ''}><summary>{title}</summary>"
                        + _trips_table(cfg, r, gr.group, trips) + "</details>")
     else:
@@ -223,8 +225,14 @@ def _window(rep: Report, rr: RouteReport, w) -> str:
     pw = next((p for p in rr.points if p.window.name == w.name), None)
     if pw and pw.award:
         out.append(_award_table(rep, rr, pw.award))
-    elif pw and pw.azul and rep.calibration:
-        out.append(_points_estimate(rep, rr, pw.azul[0]))
+    elif pw and rep.calibration:
+        if pw.azul:
+            out.append(_points_estimate(rep, rr, pw.azul[0].total_price, pw.azul[0]))
+        elif rr.main.trips.get(w.name):
+            # sem preço "só Azul" (ex.: Azul só com conexão): usa o mais barato de qualquer cia
+            t = rr.main.trips[w.name][0]
+            out.append(_points_estimate(rep, rr, (t.total_price - r.extra_cost) / rr.main.group.size, t,
+                                        approx=True))
     return "".join(out)
 
 
@@ -232,10 +240,10 @@ def _points_per_group(rep: Report, per_person: int) -> str:
     return " · ".join(f"{escape(g.name)}: <b>{pts(per_person * g.size)}</b>" for g in rep.cfg.groups)
 
 
-def _points_estimate(rep: Report, rr: RouteReport, t: Trip) -> str:
-    """Estimativa de pontos a partir do preço da própria Azul em R$."""
+def _points_estimate(rep: Report, rr: RouteReport, price_pp: float, t: Trip, approx: bool = False) -> str:
+    """Estimativa de pontos a partir do preço da própria Azul em R$ (por pessoa)."""
     cfg, cal = rep.cfg, rep.calibration
-    pp = cal.estimate(t.total_price)
+    pp = cal.estimate(price_pp)
     if cal.calibrated:
         how = (f"calibrada com {cal.samples_used} anotação(ões) suas do site da Azul: "
                f"R$ 1 ≈ {cal.points_per_real:.0f} pontos")
@@ -244,10 +252,14 @@ def _points_estimate(rep: Report, rr: RouteReport, t: Trip) -> str:
                f"<code>pontos_azul.yaml</code> para calibrar")
     main = cfg.main_group
     plan = an.plan_points(cfg, pp * main.size, rep.bonus_pcts)
-    return (f"<div class='good'>🔵 <b>Em pontos Azul (estimativa):</b> cerca de <b>{pts(pp)} pontos por pessoa</b> "
-            f"— {_points_per_group(rep, pp)}.<br><span class='small'>Baseado na passagem mais barata da Azul em R$ "
-            f"({brl(t.total_price)}/pessoa, {dm(t.out.day)} → {dm(t.back.day)}); {how}.</span><br>"
-            f"<span class='small'>Para {escape(main.name)}: {_plan_text(cfg, plan)}</span></div>")
+    multi = len(cfg.groups) > 1 or main.size > 1
+    base = ("na passagem mais barata de qualquer companhia (não achei preço só da Azul nessa rota; "
+            "a estimativa é menos precisa)" if approx else "na passagem mais barata da Azul em R$")
+    return (f"<div class='good'>🔵 <b>Em pontos Azul (estimativa):</b> cerca de <b>{pts(pp)} pontos</b>"
+            + (f" por pessoa — {_points_per_group(rep, pp)}" if multi else "")
+            + f".<br><span class='small'>Baseado {base} ({brl(price_pp)}, {dm(t.out.day)} → {dm(t.back.day)}); "
+            f"{how}.</span><br><span class='small'>"
+            + (f"Para {escape(main.name)}: " if multi else "") + f"{_plan_text(cfg, plan)}</span></div>")
 
 
 def _award_table(rep: Report, rr: RouteReport, trips: list[Trip]) -> str:
