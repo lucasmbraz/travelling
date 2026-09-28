@@ -1,0 +1,35 @@
+name: Teste pontos Azul
+
+on:
+  workflow_dispatch:
+    inputs:
+      origem: {default: BEL}
+      destino: {default: FOR}
+      data: {description: "AAAA-MM-DD", default: "2026-11-10"}
+
+permissions:
+  contents: write
+
+jobs:
+  teste:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install . playwright && python -m playwright install --with-deps chromium
+      - name: Buscar pontos no site da Azul
+        run: python tools/teste_azul.py "${{ inputs.origem }}" "${{ inputs.destino }}" "${{ inputs.data }}" saida
+      - name: Guardar resultado no branch teste-azul
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd saida
+          git init -q -b teste-azul
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Teste Azul ${{ inputs.origem }}-${{ inputs.destino }} ${{ inputs.data }}"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" teste-azul
