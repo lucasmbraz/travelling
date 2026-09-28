@@ -1,0 +1,16 @@
+{
+ "url": "https://www.voeazul.com.br/br/pt/home/selecao-voo?c%5B0%5D.ds=BEL&c%5B0%5D.std=11%2F10%2F2026&c%5B0%5D.as=FOR&p%5B0%5D.t=ADT&p%5B0%5D.c=1&p%5B0%5D.cp=false&f.dl=3&f.dr=3&cc=PTS",
+ "responses": [
+  {
+   "url": "https://www.voeazul.com.br/br/pt/home/selecao-voo?c%5B0%5D.ds=BEL&c%5B0%5D.std=11%2F10%2F2026&c%5B0%5D.as=FOR&p%5B0%5D.t=ADT&p%5B0%5D.c=1&p%5B0%5D.cp=false&f.dl=3&f.dr=3&cc=PTS",
+   "status": 403,
+   "type": "text/html"
+  }
+ ],
+ "json": [],
+ "status_inicial": 403,
+ "url_final": "https://www.voeazul.com.br/br/pt/home/selecao-voo?c%5B0%5D.ds=BEL&c%5B0%5D.std=11%2F10%2F2026&c%5B0%5D.as=FOR&p%5B0%5D.t=ADT&p%5B0%5D.c=1&p%5B0%5D.cp=false&f.dl=3&f.dr=3&cc=PTS",
+ "titulo": "Access Denied",
+ "parece_bloqueado": true,
+ "pontos_no_texto": []
+}
