@@ -1,221 +1,74 @@
 {
  "alerted": {
-  "BEL-BSB|qualquer": 1193.0,
-  "BEL-FOR|qualquer": 563.0,
-  "BEL-GIG|qualquer": 752.0,
-  "BEL-MAO|qualquer": 861.0,
-  "BEL-NAT|qualquer": 1112.0,
-  "BEL-SLZ|qualquer": 1077.0,
-  "BEL-SSA|qualquer": 995.0
+  "BEL-BSB|qualquer|familia|pp": 1193.0,
+  "BEL-FOR|qualquer|familia|pp": 925.0
+ },
+ "anywhere": {
+  "deals": {},
+  "offset": 15
  },
  "history": {
-  "BEL-BOG|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 3455.0
-   },
+  "BEL-BSB|qualquer|familia|pp": [
    {
     "t": "2026-09-28",
-    "v": 3456.0
+    "v": 1193.0
    }
   ],
-  "BEL-BSB|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 1168.0
-   },
+  "BEL-FOR|qualquer|familia|pp": [
    {
     "t": "2026-09-28",
-    "v": 1163.0
+    "v": 925.0
    }
   ],
-  "BEL-CAY|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 3024.0
-   },
+  "BEL-GRU|qualquer|familia|pp": [
    {
     "t": "2026-09-28",
-    "v": 3025.0
+    "v": 1431.0
    }
   ],
-  "BEL-CNF|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 1449.0
-   },
+  "BEL-LIS|qualquer|familia|pp": [
    {
     "t": "2026-09-28",
-    "v": 1449.0
+    "v": 4244.0
    }
   ],
-  "BEL-FLN|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 1342.0
-   },
+  "BEL-MCZ|Próximos meses (flexível)|familia|pp": [
    {
     "t": "2026-09-28",
-    "v": 1302.0
+    "v": 1883.8
    }
   ],
-  "BEL-FOR|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 563.0
-   },
+  "BEL-MIA|qualquer|familia|pp": [
    {
     "t": "2026-09-28",
-    "v": 563.0
+    "v": 3584.0
    }
   ],
-  "BEL-GIG|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 720.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 720.0
-   }
-  ],
-  "BEL-GRU|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 1336.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 1336.0
-   }
-  ],
-  "BEL-LIM|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 3499.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 3499.0
-   }
-  ],
-  "BEL-LIS|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 3945.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 3947.0
-   }
-  ],
-  "BEL-MAO|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 861.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 861.0
-   }
-  ],
-  "BEL-MCZ|Fim de ano|brl": [
-   {
-    "t": "2026-09-27",
-    "v": 1569.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 1569.0
-   }
-  ],
-  "BEL-MCZ|Próximos meses (flexível)|brl": [
-   {
-    "t": "2026-09-27",
-    "v": 1423.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 1423.0
-   }
-  ],
-  "BEL-MIA|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 3282.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 3282.0
-   }
-  ],
-  "BEL-MII|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 3372.0
-   },
+  "BEL-MII|qualquer|familia|pp": [
    {
     "t": "2026-09-28",
     "v": 3372.0
    }
   ],
-  "BEL-NAT|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 1112.0
-   },
+  "BEL-REC|Próximos meses (flexível)|familia|pp": [
    {
     "t": "2026-09-28",
-    "v": 1112.0
+    "v": 1233.0
    }
   ],
-  "BEL-REC|Fim de ano|brl": [
+  "BEL-SSA|qualquer|familia|pp": [
    {
     "t": "2026-09-28",
-    "v": 1042.0
+    "v": 1228.0
    }
   ],
-  "BEL-REC|Próximos meses (flexível)|brl": [
-   {
-    "t": "2026-09-28",
-    "v": 900.0
-   }
-  ],
-  "BEL-SLZ|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 1077.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 1077.0
-   }
-  ],
-  "BEL-SSA|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 995.0
-   },
-   {
-    "t": "2026-09-28",
-    "v": 995.0
-   }
-  ],
-  "BEL-STM|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 1515.0
-   },
+  "BEL-STM|qualquer|familia|pp": [
    {
     "t": "2026-09-28",
     "v": 1268.0
    }
   ],
-  "BEL-VCP|qualquer": [
-   {
-    "t": "2026-09-27",
-    "v": 1581.0
-   },
+  "BEL-VCP|qualquer|familia|pp": [
    {
     "t": "2026-09-28",
     "v": 1583.0
