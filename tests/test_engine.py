@@ -23,7 +23,7 @@ def test_report_has_routes_windows_and_no_past_dates():
             for t in wr.cash:
                 assert wr.window.start <= t.out.day and t.back.day <= wr.window.end
     rec = rep.routes[1]
-    assert rec.windows[0].cash[0].extra_cost == 350
+    assert rec.windows[0].cash[0].extra_cost == 0
     assert rep.deals and rep.bonuses.get("livelo").bonus_pct == 100
 
 

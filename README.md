@@ -5,8 +5,7 @@ Um radar pessoal que roda sozinho, de graça, no GitHub, e faz três coisas:
 1. **Quando é mais barato ir para Maceió (ou Recife)?** Olha o mês inteiro, ida e volta
    separadas, e monta as melhores combinações respeitando quantas noites você quer ficar,
    em **reais** e em **pontos Azul**. Mostra um calendário colorido (verde = barato) e já
-   diz se vale mais a pena usar pontos ou pagar em dinheiro. A opção "Recife + carro" já
-   soma o custo da estrada.
+   diz se vale mais a pena usar pontos ou pagar em dinheiro.
 2. **Para onde dá pra ir barato?** Lista as passagens de ida e volta mais baratas saindo de
    Belém para *qualquer* destino nos próximos meses (Lima, Fortaleza, São Luís...).
 3. **Me avisa das promoções.** Lê os blogs de milhas (Passageiro de Primeira, Melhores
@@ -99,8 +98,8 @@ Actions → Variables**.
 
 ### 5. Ajustar ao seu gosto
 Tudo fica em [`config.yaml`](config.yaml): destinos, janelas de viagem (ex.: "Fim de ano,
-de 12/12 a 15/01, de 7 a 21 noites"), preço-alvo de cada rota, custo do carro
-Recife→Maceió, preço máximo para avisar de oportunidades, proporção e bônus de cada
+de 12/12 a 15/01, de 7 a 21 noites"), preço-alvo de cada rota (e, se quiser, um
+custo extra somado ao total, com `custo_extra_reais`), preço máximo para avisar de oportunidades, proporção e bônus de cada
 programa de pontos.
 
 ## Usar no computador (opcional)

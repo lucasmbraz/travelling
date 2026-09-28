@@ -31,13 +31,11 @@ valor_milheiro_azul: 16.0
 # Destinos que você acompanha sempre (ida e volta a partir da origem).
 rotas:
   - destino: MCZ
-    nome: Maceió (casa dos pais)
+    nome: Maceió
     alvo_reais: 900          # me avise se ida+volta ficar abaixo disso
     alvo_pontos: 25000       # ...ou abaixo disso em pontos Azul
   - destino: REC
-    nome: Recife + carro até Maceió
-    custo_extra_reais: 350   # combustível + pedágio, ida e volta (~260 km cada)
-    observacao: "~3h30 de carro até Maceió"
+    nome: Recife
     alvo_reais: 700
     alvo_pontos: 20000
 
