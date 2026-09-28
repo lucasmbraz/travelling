@@ -29,7 +29,7 @@ GitHub Actions (3x por dia)
         ↓
    calcula melhores datas, plano de pontos, compara com o histórico
         ↓
-   painel no GitHub Pages  +  notificação push (ntfy)
+   painel (branch "painel", aberto pelo raw.githack.com)  +  notificação push (ntfy)
 ```
 
 ## Configurar (uns 20 minutos, uma vez só)
@@ -78,15 +78,24 @@ No repositório: **Settings → Secrets and variables → Actions → New reposi
 | `SEATS_AERO_KEY` | (opcional) chave do Seats.aero |
 | `SALDOS` | (opcional) ex.: `azul=12000,livelo=45000,cartao=20000` — assim seus saldos não ficam públicos |
 
-Depois: **Settings → Pages → Source: GitHub Actions**. Em **Actions → Radar de passagens →
-Run workflow** você roda na hora; depois ele roda sozinho 3x por dia. O endereço do painel
-aparece no resultado do job (algo como `https://SEU_USUARIO.github.io/travelling/`). Se
-quiser um botão "Ver painel" nas notificações, crie a *variable* (aba **Variables**, não
-Secrets) `DASHBOARD_URL` com esse endereço.
+Depois: em **Actions → Radar de passagens → Run workflow** você roda na hora; depois ele
+roda sozinho 3x por dia.
 
-> **Privacidade:** o GitHub Pages é público mesmo com o repositório privado em contas
-> gratuitas. O painel não tem nada sensível além dos saldos — por isso a opção `SALDOS`
-> como segredo em vez de colocar no `config.yaml`.
+O painel fica salvo no branch `painel` do repositório e abre em:
+
+**https://raw.githack.com/SEU_USUARIO/travelling/painel/index.html**
+
+(O [raw.githack.com](https://raw.githack.com/) é um serviço gratuito que mostra como página
+um arquivo HTML guardado no GitHub. Depois de cada atualização, pode levar alguns minutos
+para a versão nova aparecer.) O endereço também aparece no resumo de cada execução da Action e
+no botão "Ver painel" das notificações. Para usar outro endereço (por exemplo, um subdomínio
+seu no GitHub Pages), crie a *variable* `DASHBOARD_URL` em **Settings → Secrets and variables →
+Actions → Variables**.
+
+> **Privacidade:** o repositório é público, então o painel também é (quem souber o endereço
+> consegue abrir). Os tokens e o canal de notificação ficam nos segredos e nunca aparecem. Os
+> saldos de pontos, se configurados no segredo `SALDOS`, não ficam no código, mas aparecem no
+> painel.
 
 ### 5. Ajustar ao seu gosto
 Tudo fica em [`config.yaml`](config.yaml): destinos, janelas de viagem (ex.: "Fim de ano,

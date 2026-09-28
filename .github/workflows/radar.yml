@@ -10,19 +10,19 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: radar
   cancel-in-progress: false
 
+env:
+  # O painel fica no branch "painel" e é aberto pelo raw.githack.com, que entrega o
+  # arquivo do GitHub como página (o endereço "raw" do GitHub mostraria só o código).
+  PAINEL_URL: https://raw.githack.com/${{ github.repository }}/painel/index.html
+
 jobs:
   radar:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -38,7 +38,7 @@ jobs:
           SEATS_AERO_KEY: ${{ secrets.SEATS_AERO_KEY }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           SALDOS: ${{ secrets.SALDOS }}
-          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL || env.PAINEL_URL }}
         run: python -m radar painel
 
       - name: Guardar histórico de preços
@@ -46,11 +46,22 @@ jobs:
           git config user.name "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
           git add data/state.json 2>/dev/null || true
-          git diff --cached --quiet || (git commit -m "Atualiza histórico de preços" && git push)
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualiza histórico de preços"
+            git pull --rebase -q origin main
+            git push origin HEAD:main
+          fi
 
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-      - id: deploy
-        uses: actions/deploy-pages@v4
+      - name: Publicar painel no branch "painel"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Um único commit, sempre substituído: o branch não cresce com o tempo.
+          cd site
+          git init -q -b painel
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add index.html
+          git commit -q -m "Painel atualizado em $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" painel
+          echo "### 📊 Painel: ${PAINEL_URL}" >> "$GITHUB_STEP_SUMMARY"
