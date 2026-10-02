@@ -4,7 +4,7 @@
   "BEL-BSB|qualquer|familia|pp": 1193.0,
   "BEL-CGB|qualquer|adulto|pp": 1090.0,
   "BEL-CNF|qualquer|adulto|pp": 1117.0,
-  "BEL-FOR|qualquer|adulto|pp": 646.0,
+  "BEL-FOR|qualquer|adulto|pp": 611.0,
   "BEL-FOR|qualquer|familia|pp": 925.0,
   "BEL-GIG|qualquer|adulto|pp": 789.0,
   "BEL-GYN|qualquer|adulto|pp": 858.0,
@@ -13,21 +13,21 @@
   "BEL-MCP|qualquer|adulto|pp": 575.0,
   "BEL-SDU|qualquer|adulto|pp": 986.0,
   "BEL-SLZ|qualquer|adulto|pp": 1153.0,
-  "BEL-SSA|qualquer|adulto|pp": 995.0,
+  "BEL-SSA|qualquer|adulto|pp": 821.0,
   "BEL-STM|qualquer|adulto|pp": 1149.0,
   "BEL-THE|qualquer|adulto|pp": 996.0
  },
  "anywhere": {
   "deals": {
    "AJU": {
-    "checked": "2026-09-30",
-    "depart": "2026-11-01",
+    "checked": "2026-10-02",
+    "depart": "2026-10-04",
     "dest": "AJU",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20AJU%20on%202026-11-01%20through%202026-11-08",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20AJU%20on%202026-10-04%20through%202026-10-11",
     "pax": 1,
-    "price": 2476.0,
+    "price": 2193.0,
     "provider": "Google Voos",
-    "ret": "2026-11-08"
+    "ret": "2026-10-11"
    },
    "BOG": {
     "checked": "2026-10-01",
@@ -40,14 +40,14 @@
     "ret": "2026-10-12"
    },
    "BPS": {
-    "checked": "2026-10-01",
-    "depart": "2026-12-01",
+    "checked": "2026-10-02",
+    "depart": "2026-11-21",
     "dest": "BPS",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20BPS%20on%202026-12-01%20through%202026-12-11",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20BPS%20on%202026-11-21%20through%202026-12-01",
     "pax": 1,
-    "price": 1964.0,
+    "price": 1996.0,
     "provider": "Google Voos",
-    "ret": "2026-12-11"
+    "ret": "2026-12-01"
    },
    "BSB": {
     "checked": "2026-10-01",
@@ -191,13 +191,13 @@
    },
    "FOR": {
     "checked": "2026-10-02",
-    "depart": "2026-11-06",
+    "depart": "2026-11-01",
     "dest": "FOR",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20FOR%20on%202026-11-06%20through%202026-11-16",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20FOR%20on%202026-11-01%20through%202026-11-11",
     "pax": 1,
-    "price": 677.0,
+    "price": 611.0,
     "provider": "Google Voos",
-    "ret": "2026-11-16"
+    "ret": "2026-11-11"
    },
    "GIG": {
     "checked": "2026-10-01",
@@ -240,14 +240,14 @@
     "ret": "2026-12-15"
    },
    "IOS": {
-    "checked": "2026-10-01",
-    "depart": "2026-11-15",
+    "checked": "2026-10-02",
+    "depart": "2026-12-01",
     "dest": "IOS",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20IOS%20on%202026-11-15%20through%202026-11-25",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20IOS%20on%202026-12-01%20through%202026-12-08",
     "pax": 1,
-    "price": 2221.0,
+    "price": 2043.0,
     "provider": "Google Voos",
-    "ret": "2026-11-25"
+    "ret": "2026-12-08"
    },
    "JFK": {
     "checked": "2026-10-02",
@@ -270,14 +270,14 @@
     "ret": "2026-12-03"
    },
    "JPA": {
-    "checked": "2026-09-30",
-    "depart": "2026-12-03",
+    "checked": "2026-10-02",
+    "depart": "2026-11-15",
     "dest": "JPA",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20JPA%20on%202026-12-03%20through%202026-12-06",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20JPA%20on%202026-11-15%20through%202026-11-21",
     "pax": 1,
-    "price": 2204.0,
+    "price": 2195.0,
     "provider": "Google Voos",
-    "ret": "2026-12-06"
+    "ret": "2026-11-21"
    },
    "LIM": {
     "checked": "2026-10-01",
@@ -300,14 +300,14 @@
     "ret": "2026-10-30"
    },
    "MAB": {
-    "checked": "2026-09-30",
-    "depart": "2026-11-15",
+    "checked": "2026-10-02",
+    "depart": "2026-10-31",
     "dest": "MAB",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MAB%20on%202026-11-15%20through%202026-11-25",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MAB%20on%202026-10-31%20through%202026-11-10",
     "pax": 1,
-    "price": 807.0,
+    "price": 814.0,
     "provider": "Google Voos",
-    "ret": "2026-11-25"
+    "ret": "2026-11-10"
    },
    "MAD": {
     "checked": "2026-10-02",
@@ -320,14 +320,14 @@
     "ret": "2026-10-29"
    },
    "MAO": {
-    "checked": "2026-09-30",
-    "depart": "2026-12-03",
+    "checked": "2026-10-02",
+    "depart": "2026-12-02",
     "dest": "MAO",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MAO%20on%202026-12-03%20through%202026-12-10",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MAO%20on%202026-12-02%20through%202026-12-11",
     "pax": 1,
-    "price": 915.0,
+    "price": 923.0,
     "provider": "Google Voos",
-    "ret": "2026-12-10"
+    "ret": "2026-12-11"
    },
    "MCO": {
     "checked": "2026-10-02",
@@ -340,14 +340,14 @@
     "ret": "2026-10-24"
    },
    "MCP": {
-    "checked": "2026-09-30",
-    "depart": "2026-12-02",
+    "checked": "2026-10-02",
+    "depart": "2026-11-05",
     "dest": "MCP",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MCP%20on%202026-12-02%20through%202026-12-11",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MCP%20on%202026-11-05%20through%202026-11-14",
     "pax": 1,
-    "price": 651.0,
+    "price": 577.0,
     "provider": "Google Voos",
-    "ret": "2026-12-11"
+    "ret": "2026-11-14"
    },
    "MDE": {
     "checked": "2026-10-01",
@@ -380,14 +380,14 @@
     "ret": "2026-11-25"
    },
    "NAT": {
-    "checked": "2026-09-30",
-    "depart": "2026-11-24",
+    "checked": "2026-10-02",
+    "depart": "2026-12-09",
     "dest": "NAT",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20NAT%20on%202026-11-24%20through%202026-12-03",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20NAT%20on%202026-12-09%20through%202026-12-12",
     "pax": 1,
-    "price": 1234.0,
+    "price": 1204.0,
     "provider": "Google Voos",
-    "ret": "2026-12-03"
+    "ret": "2026-12-12"
    },
    "NVT": {
     "checked": "2026-10-01",
@@ -420,14 +420,14 @@
     "ret": "2026-11-11"
    },
    "PMW": {
-    "checked": "2026-10-01",
-    "depart": "2026-10-24",
+    "checked": "2026-10-02",
+    "depart": "2026-11-21",
     "dest": "PMW",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20PMW%20on%202026-10-24%20through%202026-10-31",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20PMW%20on%202026-11-21%20through%202026-12-01",
     "pax": 1,
-    "price": 1585.0,
+    "price": 1668.0,
     "provider": "Google Voos",
-    "ret": "2026-10-31"
+    "ret": "2026-12-01"
    },
    "POA": {
     "checked": "2026-10-01",
@@ -481,43 +481,43 @@
    },
    "SIN": {
     "checked": "2026-10-02",
-    "depart": "2026-10-16",
+    "depart": "2026-10-20",
     "dest": "SIN",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SIN%20on%202026-10-16%20through%202026-10-21",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SIN%20on%202026-10-20%20through%202026-10-23",
     "pax": 1,
-    "price": 11976.0,
+    "price": 13864.0,
     "provider": "Google Voos",
-    "ret": "2026-10-21"
+    "ret": "2026-10-23"
    },
    "SLZ": {
-    "checked": "2026-09-30",
-    "depart": "2026-11-07",
+    "checked": "2026-10-02",
+    "depart": "2026-11-10",
     "dest": "SLZ",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SLZ%20on%202026-11-07%20through%202026-11-14",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SLZ%20on%202026-11-10%20through%202026-11-20",
     "pax": 1,
-    "price": 1153.0,
+    "price": 1158.0,
     "provider": "Google Voos",
-    "ret": "2026-11-14"
+    "ret": "2026-11-20"
    },
    "SSA": {
-    "checked": "2026-09-30",
-    "depart": "2026-11-04",
+    "checked": "2026-10-02",
+    "depart": "2026-12-01",
     "dest": "SSA",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SSA%20on%202026-11-04%20through%202026-11-14",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SSA%20on%202026-12-01%20through%202026-12-11",
     "pax": 1,
-    "price": 995.0,
+    "price": 821.0,
     "provider": "Google Voos",
-    "ret": "2026-11-14"
+    "ret": "2026-12-11"
    },
    "STM": {
-    "checked": "2026-09-30",
-    "depart": "2026-10-30",
+    "checked": "2026-10-02",
+    "depart": "2026-11-09",
     "dest": "STM",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20STM%20on%202026-10-30%20through%202026-11-06",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20STM%20on%202026-11-09%20through%202026-11-18",
     "pax": 1,
-    "price": 1174.0,
+    "price": 1167.0,
     "provider": "Google Voos",
-    "ret": "2026-11-06"
+    "ret": "2026-11-18"
    },
    "STN": {
     "checked": "2026-10-02",
@@ -530,14 +530,14 @@
     "ret": "2026-11-15"
    },
    "THE": {
-    "checked": "2026-09-30",
-    "depart": "2026-11-29",
+    "checked": "2026-10-02",
+    "depart": "2026-10-31",
     "dest": "THE",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20THE%20on%202026-11-29%20through%202026-12-09",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20THE%20on%202026-10-31%20through%202026-11-10",
     "pax": 1,
-    "price": 1116.0,
+    "price": 1128.0,
     "provider": "Google Voos",
-    "ret": "2026-12-09"
+    "ret": "2026-11-10"
    },
    "VCP": {
     "checked": "2026-10-01",
@@ -570,7 +570,7 @@
     "ret": "2026-10-11"
    }
   },
-  "offset": 56
+  "offset": 71
  },
  "history": {
   "BEL-AJU|qualquer|adulto|pp": [
@@ -774,7 +774,7 @@
    },
    {
     "t": "2026-10-02",
-    "v": 677.0
+    "v": 611.0
    }
   ],
   "BEL-FOR|qualquer|familia|pp": [
@@ -968,7 +968,7 @@
    },
    {
     "t": "2026-10-02",
-    "v": 651.0
+    "v": 577.0
    }
   ],
   "BEL-MCZ|Fim de ano|adulto|pp": [
@@ -990,7 +990,7 @@
    },
    {
     "t": "2026-10-02",
-    "v": 1691.0
+    "v": 1608.0
    }
   ],
   "BEL-MCZ|Próximos meses (flexível)|adulto|pp": [
@@ -1080,7 +1080,7 @@
    },
    {
     "t": "2026-10-02",
-    "v": 1234.0
+    "v": 1204.0
    }
   ],
   "BEL-NVT|qualquer|adulto|pp": [
@@ -1192,7 +1192,7 @@
    },
    {
     "t": "2026-10-02",
-    "v": 1394.0
+    "v": 1353.0
    }
   ],
   "BEL-REC|Próximos meses (flexível)|adulto|pp": [
@@ -1294,7 +1294,7 @@
    },
    {
     "t": "2026-10-02",
-    "v": 995.0
+    "v": 821.0
    }
   ],
   "BEL-SSA|qualquer|familia|pp": [
@@ -1424,6 +1424,9 @@
   "https://pontospravoar.com/oferta-relampago-clube-azul-oferece-ate-300-de-bonus-na-adesao-ate-o-final-do-ano-12-off-com-cartao-azul-itau/",
   "https://pontospravoar.com/transfira-pontos-inter-loop-ganhe-ate-100-porcento-bonus-azul-fidelidade/",
   "https://passageirodeprimeira.com/azul-fidelidade-oferece-ate-100-bonus-transferencias-pontos-inter-loop/",
-  "https://pontospravoar.com/transfira-pontos-livelo-connectmiles-ganhe-50-porcento-bonus/"
+  "https://pontospravoar.com/transfira-pontos-livelo-connectmiles-ganhe-50-porcento-bonus/",
+  "https://passageirodeprimeira.com/livelo-oferece-ate-40-de-bonus-nas-transferencias-de-pontos-para-o-etihad-guest-3/",
+  "https://pontospravoar.com/azul-fidelidade-oferece-ate-100-porcento-bonus-transferencias-pontos-alloyal/",
+  "https://passageirodeprimeira.com/voe-para-amsterdam-a-partir-de-r-1-559-ou-63-mil-milhas-latam-taxas/"
  ]
 }
