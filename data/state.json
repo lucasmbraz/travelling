@@ -4,6 +4,7 @@
   "BEL-BSB|qualquer|familia|pp": 1193.0,
   "BEL-CGB|qualquer|adulto|pp": 866.0,
   "BEL-CNF|qualquer|adulto|pp": 883.0,
+  "BEL-CWB|qualquer|adulto|pp": 1138.0,
   "BEL-FOR|qualquer|adulto|pp": 609.0,
   "BEL-FOR|qualquer|familia|pp": 925.0,
   "BEL-GYN|qualquer|adulto|pp": 698.0,
@@ -38,14 +39,14 @@
     "ret": "2026-11-28"
    },
    "BOG": {
-    "checked": "2026-10-21",
-    "depart": "2026-10-22",
+    "checked": "2026-10-22",
+    "depart": "2026-10-31",
     "dest": "BOG",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20BOG%20on%202026-10-22%20through%202026-11-01",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20BOG%20on%202026-10-31%20through%202026-11-10",
     "pax": 1,
-    "price": 3401.0,
+    "price": 3418.0,
     "provider": "Google Voos",
-    "ret": "2026-11-01"
+    "ret": "2026-11-10"
    },
    "BPS": {
     "checked": "2026-10-22",
@@ -128,14 +129,14 @@
     "ret": "2026-11-15"
    },
    "CNF": {
-    "checked": "2026-10-21",
-    "depart": "2026-11-14",
+    "checked": "2026-10-22",
+    "depart": "2026-11-24",
     "dest": "CNF",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20CNF%20on%202026-11-14%20through%202026-11-24",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20CNF%20on%202026-11-24%20through%202026-12-03",
     "pax": 1,
-    "price": 1161.0,
+    "price": 1051.0,
     "provider": "Google Voos",
-    "ret": "2026-11-24"
+    "ret": "2026-12-03"
    },
    "CPH": {
     "checked": "2026-10-22",
@@ -148,12 +149,12 @@
     "ret": "2026-11-10"
    },
    "CTG": {
-    "checked": "2026-10-21",
+    "checked": "2026-10-22",
     "depart": "2026-11-03",
     "dest": "CTG",
     "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20CTG%20on%202026-11-03%20through%202026-11-13",
     "pax": 1,
-    "price": 4218.0,
+    "price": 4240.0,
     "provider": "Google Voos",
     "ret": "2026-11-13"
    },
@@ -168,24 +169,24 @@
     "ret": "2026-11-13"
    },
    "CWB": {
-    "checked": "2026-10-21",
-    "depart": "2026-11-14",
+    "checked": "2026-10-22",
+    "depart": "2026-11-16",
     "dest": "CWB",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20CWB%20on%202026-11-14%20through%202026-11-24",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20CWB%20on%202026-11-16%20through%202026-11-26",
     "pax": 1,
-    "price": 1256.0,
+    "price": 1138.0,
     "provider": "Google Voos",
-    "ret": "2026-11-24"
+    "ret": "2026-11-26"
    },
    "EZE": {
     "checked": "2026-10-22",
-    "depart": "2026-12-10",
+    "depart": "2027-01-11",
     "dest": "EZE",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20EZE%20on%202026-12-10%20through%202026-12-13",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20EZE%20on%202027-01-11%20through%202027-01-20",
     "pax": 1,
-    "price": 3188.0,
+    "price": 3631.0,
     "provider": "Google Voos",
-    "ret": "2026-12-13"
+    "ret": "2027-01-20"
    },
    "FCO": {
     "checked": "2026-10-22",
@@ -218,14 +219,14 @@
     "ret": "2026-11-13"
    },
    "FLN": {
-    "checked": "2026-10-21",
-    "depart": "2026-11-06",
+    "checked": "2026-10-22",
+    "depart": "2026-11-15",
     "dest": "FLN",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20FLN%20on%202026-11-06%20through%202026-11-16",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20FLN%20on%202026-11-15%20through%202026-11-21",
     "pax": 1,
-    "price": 1355.0,
+    "price": 1940.0,
     "provider": "Google Voos",
-    "ret": "2026-11-16"
+    "ret": "2026-11-21"
    },
    "FOR": {
     "checked": "2026-10-22",
@@ -268,12 +269,12 @@
     "ret": "2026-11-16"
    },
    "IGU": {
-    "checked": "2026-10-21",
+    "checked": "2026-10-22",
     "depart": "2026-11-11",
     "dest": "IGU",
     "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20IGU%20on%202026-11-11%20through%202026-11-18",
     "pax": 1,
-    "price": 1223.0,
+    "price": 1869.0,
     "provider": "Google Voos",
     "ret": "2026-11-18"
    },
@@ -338,14 +339,14 @@
     "ret": "2026-11-30"
    },
    "LIM": {
-    "checked": "2026-10-21",
-    "depart": "2026-11-05",
+    "checked": "2026-10-22",
+    "depart": "2026-11-06",
     "dest": "LIM",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20LIM%20on%202026-11-05%20through%202026-11-15",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20LIM%20on%202026-11-06%20through%202026-11-16",
     "pax": 1,
-    "price": 3707.0,
+    "price": 3719.0,
     "provider": "Google Voos",
-    "ret": "2026-11-15"
+    "ret": "2026-11-16"
    },
    "LIS": {
     "checked": "2026-10-22",
@@ -408,12 +409,12 @@
     "ret": "2027-01-17"
    },
    "MDE": {
-    "checked": "2026-10-21",
+    "checked": "2026-10-22",
     "depart": "2026-11-03",
     "dest": "MDE",
     "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MDE%20on%202026-11-03%20through%202026-11-13",
     "pax": 1,
-    "price": 4215.0,
+    "price": 4223.0,
     "provider": "Google Voos",
     "ret": "2026-11-13"
    },
@@ -448,14 +449,14 @@
     "ret": "2026-12-16"
    },
    "NVT": {
-    "checked": "2026-10-21",
-    "depart": "2026-11-24",
+    "checked": "2026-10-22",
+    "depart": "2027-01-10",
     "dest": "NVT",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20NVT%20on%202026-11-24%20through%202026-12-03",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20NVT%20on%202027-01-10%20through%202027-01-20",
     "pax": 1,
-    "price": 1386.0,
+    "price": 1887.0,
     "provider": "Google Voos",
-    "ret": "2026-12-03"
+    "ret": "2027-01-20"
    },
    "OPO": {
     "checked": "2026-10-22",
@@ -498,22 +499,22 @@
     "ret": "2027-01-20"
    },
    "POA": {
-    "checked": "2026-10-21",
-    "depart": "2026-11-24",
+    "checked": "2026-10-22",
+    "depart": "2026-11-16",
     "dest": "POA",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20POA%20on%202026-11-24%20through%202026-12-04",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20POA%20on%202026-11-16%20through%202026-11-26",
     "pax": 1,
-    "price": 1100.0,
+    "price": 1274.0,
     "provider": "Google Voos",
-    "ret": "2026-12-04"
+    "ret": "2026-11-26"
    },
    "PTY": {
-    "checked": "2026-10-21",
+    "checked": "2026-10-22",
     "depart": "2026-10-29",
     "dest": "PTY",
     "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20PTY%20on%202026-10-29%20through%202026-11-07",
     "pax": 1,
-    "price": 2966.0,
+    "price": 2974.0,
     "provider": "Google Voos",
     "ret": "2026-11-07"
    },
@@ -533,7 +534,7 @@
     "dest": "SCL",
     "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SCL%20on%202026-10-23%20through%202026-10-29",
     "pax": 1,
-    "price": 2526.0,
+    "price": 2525.0,
     "provider": "Google Voos",
     "ret": "2026-10-29"
    },
@@ -608,17 +609,17 @@
     "ret": "2026-11-21"
    },
    "VIX": {
-    "checked": "2026-10-21",
-    "depart": "2026-11-18",
+    "checked": "2026-10-22",
+    "depart": "2027-01-16",
     "dest": "VIX",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20VIX%20on%202026-11-18%20through%202026-11-28",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20VIX%20on%202027-01-16%20through%202027-01-20",
     "pax": 1,
-    "price": 1381.0,
+    "price": 1815.0,
     "provider": "Google Voos",
-    "ret": "2026-11-28"
+    "ret": "2027-01-20"
    }
   },
-  "offset": 24
+  "offset": 39
  },
  "history": {
   "BEL-AJU|qualquer|adulto|pp": [
@@ -1104,7 +1105,7 @@
    },
    {
     "t": "2026-10-22",
-    "v": 1161.0
+    "v": 1051.0
    }
   ],
   "BEL-CTG|qualquer|adulto|pp": [
@@ -1216,7 +1217,7 @@
    },
    {
     "t": "2026-10-22",
-    "v": 1256.0
+    "v": 1138.0
    }
   ],
   "BEL-EZE|qualquer|adulto|pp": [
@@ -3040,7 +3041,7 @@
    },
    {
     "t": "2026-10-22",
-    "v": 1494.0
+    "v": 1336.0
    }
   ],
   "BEL-REC|Próximos meses (flexível)|adulto|pp": [
@@ -3142,7 +3143,7 @@
    },
    {
     "t": "2026-10-22",
-    "v": 1071.0
+    "v": 1070.0
    }
   ],
   "BEL-REC|Próximos meses (flexível)|familia|pp": [
