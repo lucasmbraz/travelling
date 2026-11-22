@@ -6,6 +6,7 @@
   "BEL-GIG|qualquer|adulto|pp": 1130.0,
   "BEL-GRU|qualquer|adulto|pp": 825.0,
   "BEL-MAB|qualquer|adulto|pp": 807.0,
+  "BEL-MAO|qualquer|adulto|pp": 731.0,
   "BEL-MCP|qualquer|adulto|pp": 313.0,
   "BEL-PMW|qualquer|adulto|pp": 1065.0,
   "BEL-SDU|qualquer|adulto|pp": 1164.0,
@@ -30,16 +31,6 @@
     "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20BPS%20on%202027-01-11%20through%202027-01-20",
     "pax": 1,
     "price": 1695.0,
-    "provider": "Google Voos",
-    "ret": "2027-01-20"
-   },
-   "CAC": {
-    "checked": "2026-11-20",
-    "depart": "2027-01-16",
-    "dest": "CAC",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20CAC%20on%202027-01-16%20through%202027-01-20",
-    "pax": 1,
-    "price": 1984.0,
     "provider": "Google Voos",
     "ret": "2027-01-20"
    },
@@ -124,14 +115,14 @@
     "ret": "2027-02-05"
    },
    "FOR": {
-    "checked": "2026-11-20",
-    "depart": "2027-01-25",
+    "checked": "2026-11-22",
+    "depart": "2027-02-01",
     "dest": "FOR",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20FOR%20on%202027-01-25%20through%202027-02-04",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20FOR%20on%202027-02-01%20through%202027-02-05",
     "pax": 1,
-    "price": 464.0,
+    "price": 472.0,
     "provider": "Google Voos",
-    "ret": "2027-02-04"
+    "ret": "2027-02-05"
    },
    "GIG": {
     "checked": "2026-11-21",
@@ -183,16 +174,6 @@
     "provider": "Google Voos",
     "ret": "2026-12-06"
    },
-   "JPA": {
-    "checked": "2026-11-18",
-    "depart": "2026-12-16",
-    "dest": "JPA",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20JPA%20on%202026-12-16%20through%202026-12-24",
-    "pax": 1,
-    "price": 2133.0,
-    "provider": "Google Voos",
-    "ret": "2026-12-24"
-   },
    "LIM": {
     "checked": "2026-11-21",
     "depart": "2026-12-06",
@@ -213,6 +194,16 @@
     "provider": "Google Voos",
     "ret": "2026-12-07"
    },
+   "MAB": {
+    "checked": "2026-11-22",
+    "depart": "2027-02-02",
+    "dest": "MAB",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MAB%20on%202027-02-02%20through%202027-02-12",
+    "pax": 1,
+    "price": 850.0,
+    "provider": "Google Voos",
+    "ret": "2027-02-12"
+   },
    "MAD": {
     "checked": "2026-11-21",
     "depart": "2027-02-09",
@@ -222,6 +213,16 @@
     "price": 6571.0,
     "provider": "Google Voos",
     "ret": "2027-02-19"
+   },
+   "MAO": {
+    "checked": "2026-11-22",
+    "depart": "2026-12-19",
+    "dest": "MAO",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MAO%20on%202026-12-19%20through%202026-12-29",
+    "pax": 1,
+    "price": 731.0,
+    "provider": "Google Voos",
+    "ret": "2026-12-29"
    },
    "MCO": {
     "checked": "2026-11-21",
@@ -234,14 +235,14 @@
     "ret": "2026-12-24"
    },
    "MCP": {
-    "checked": "2026-11-20",
-    "depart": "2027-02-08",
+    "checked": "2026-11-22",
+    "depart": "2027-01-14",
     "dest": "MCP",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MCP%20on%202027-02-08%20through%202027-02-17",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20MCP%20on%202027-01-14%20through%202027-01-20",
     "pax": 1,
-    "price": 313.0,
+    "price": 404.0,
     "provider": "Google Voos",
-    "ret": "2027-02-17"
+    "ret": "2027-01-20"
    },
    "MDE": {
     "checked": "2026-11-21",
@@ -272,6 +273,16 @@
     "price": 2486.0,
     "provider": "Google Voos",
     "ret": "2026-12-09"
+   },
+   "NAT": {
+    "checked": "2026-11-22",
+    "depart": "2026-12-12",
+    "dest": "NAT",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20NAT%20on%202026-12-12%20through%202026-12-16",
+    "pax": 1,
+    "price": 1469.0,
+    "provider": "Google Voos",
+    "ret": "2026-12-16"
    },
    "OPO": {
     "checked": "2026-11-21",
@@ -343,25 +354,15 @@
     "provider": "Google Voos",
     "ret": "2027-02-19"
    },
-   "SJP": {
-    "checked": "2026-11-20",
-    "depart": "2027-01-13",
-    "dest": "SJP",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SJP%20on%202027-01-13%20through%202027-01-23",
+   "SLZ": {
+    "checked": "2026-11-22",
+    "depart": "2027-01-20",
+    "dest": "SLZ",
+    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20SLZ%20on%202027-01-20%20through%202027-01-30",
     "pax": 1,
-    "price": 1675.0,
+    "price": 1505.0,
     "provider": "Google Voos",
-    "ret": "2027-01-23"
-   },
-   "STM": {
-    "checked": "2026-11-20",
-    "depart": "2027-01-19",
-    "dest": "STM",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20STM%20on%202027-01-19%20through%202027-01-29",
-    "pax": 1,
-    "price": 1144.0,
-    "provider": "Google Voos",
-    "ret": "2027-01-29"
+    "ret": "2027-01-30"
    },
    "VIX": {
     "checked": "2026-11-21",
@@ -372,19 +373,9 @@
     "price": 1590.0,
     "provider": "Google Voos",
     "ret": "2027-02-19"
-   },
-   "XAP": {
-    "checked": "2026-11-18",
-    "depart": "2027-01-17",
-    "dest": "XAP",
-    "link": "https://www.google.com/travel/flights?hl=pt-BR&curr=BRL&q=Flights%20from%20BEL%20to%20XAP%20on%202027-01-17%20through%202027-01-27",
-    "pax": 1,
-    "price": 1985.0,
-    "provider": "Google Voos",
-    "ret": "2027-01-27"
    }
   },
-  "offset": 51
+  "offset": 66
  },
  "history": {
   "BEL-AJU|qualquer|adulto|pp": [
@@ -568,6 +559,10 @@
    },
    {
     "t": "2026-11-21",
+    "v": 1695.0
+   },
+   {
+    "t": "2026-11-22",
     "v": 1695.0
    }
   ],
@@ -791,6 +786,10 @@
    {
     "t": "2026-11-21",
     "v": 1993.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 1993.0
    }
   ],
   "BEL-BSB|qualquer|familia|pp": [
@@ -841,6 +840,10 @@
    {
     "t": "2026-11-21",
     "v": 1984.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 2276.0
    }
   ],
   "BEL-CAY|qualquer|adulto|pp": [
@@ -1263,6 +1266,10 @@
    {
     "t": "2026-11-21",
     "v": 1213.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 1213.0
    }
   ],
   "BEL-CGR|qualquer|adulto|pp": [
@@ -1462,6 +1469,10 @@
    },
    {
     "t": "2026-11-21",
+    "v": 1721.0
+   },
+   {
+    "t": "2026-11-22",
     "v": 1721.0
    }
   ],
@@ -1691,6 +1702,10 @@
    {
     "t": "2026-11-21",
     "v": 1289.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 1289.0
    }
   ],
   "BEL-EZE|qualquer|adulto|pp": [
@@ -1717,6 +1732,10 @@
    {
     "t": "2026-11-21",
     "v": 3754.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 3805.0
    }
   ],
   "BEL-FEN|qualquer|adulto|pp": [
@@ -2123,6 +2142,10 @@
    {
     "t": "2026-11-21",
     "v": 464.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 472.0
    }
   ],
   "BEL-FOR|qualquer|familia|pp": [
@@ -2330,6 +2353,10 @@
    },
    {
     "t": "2026-11-21",
+    "v": 1130.0
+   },
+   {
+    "t": "2026-11-22",
     "v": 1130.0
    }
   ],
@@ -2547,6 +2574,10 @@
    {
     "t": "2026-11-21",
     "v": 825.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 825.0
    }
   ],
   "BEL-GRU|qualquer|familia|pp": [
@@ -2747,6 +2778,10 @@
    {
     "t": "2026-11-21",
     "v": 1290.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 1290.0
    }
   ],
   "BEL-IGU|qualquer|adulto|pp": [
@@ -2860,6 +2895,10 @@
    },
    {
     "t": "2026-11-21",
+    "v": 1907.0
+   },
+   {
+    "t": "2026-11-22",
     "v": 1907.0
    }
   ],
@@ -3299,6 +3338,10 @@
    {
     "t": "2026-11-20",
     "v": 842.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 850.0
    }
   ],
   "BEL-MAD|qualquer|adulto|pp": [
@@ -3519,6 +3562,10 @@
    {
     "t": "2026-11-21",
     "v": 1422.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 731.0
    }
   ],
   "BEL-MCP|qualquer|adulto|pp": [
@@ -3737,6 +3784,10 @@
    {
     "t": "2026-11-21",
     "v": 313.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 404.0
    }
   ],
   "BEL-MCZ|Fim de ano|adulto|pp": [
@@ -4247,6 +4298,10 @@
    {
     "t": "2026-11-21",
     "v": 2486.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 2486.0
    }
   ],
   "BEL-NAT|qualquer|adulto|pp": [
@@ -4457,6 +4512,10 @@
    {
     "t": "2026-11-19",
     "v": 1789.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 1469.0
    }
   ],
   "BEL-NVT|qualquer|adulto|pp": [
@@ -4655,6 +4714,10 @@
    {
     "t": "2026-11-21",
     "v": 2316.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 2316.0
    }
   ],
   "BEL-OPO|qualquer|adulto|pp": [
@@ -4790,6 +4853,10 @@
    },
    {
     "t": "2026-11-21",
+    "v": 2197.0
+   },
+   {
+    "t": "2026-11-22",
     "v": 2197.0
    }
   ],
@@ -5178,6 +5245,10 @@
    },
    {
     "t": "2026-11-21",
+    "v": 1266.0
+   },
+   {
+    "t": "2026-11-22",
     "v": 1266.0
    }
   ],
@@ -5661,6 +5732,10 @@
    {
     "t": "2026-11-21",
     "v": 1020.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 1020.0
    }
   ],
   "BEL-REC|Próximos meses (flexível)|familia|pp": [
@@ -5704,6 +5779,10 @@
    },
    {
     "t": "2026-11-21",
+    "v": 3129.0
+   },
+   {
+    "t": "2026-11-22",
     "v": 3129.0
    }
   ],
@@ -5919,6 +5998,10 @@
    {
     "t": "2026-11-21",
     "v": 1164.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 1164.0
    }
   ],
   "BEL-SDU|qualquer|familia|pp": [
@@ -5951,6 +6034,10 @@
    {
     "t": "2026-11-21",
     "v": 1675.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 2118.0
    }
   ],
   "BEL-SLZ|qualquer|adulto|pp": [
@@ -6165,6 +6252,10 @@
    {
     "t": "2026-11-19",
     "v": 1410.0
+   },
+   {
+    "t": "2026-11-22",
+    "v": 1505.0
    }
   ],
   "BEL-SSA|qualquer|adulto|pp": [
@@ -7176,6 +7267,10 @@
    },
    {
     "t": "2026-11-21",
+    "v": 1590.0
+   },
+   {
+    "t": "2026-11-22",
     "v": 1590.0
    }
   ],
